@@ -1,0 +1,3 @@
+[submodule "3rdparty/kqoauth"]
+	path = 3rdparty/kqoauth
+	url = git://gitorious.org/~gorthauer/kqoauth/gorthauers-kqoauth.git
