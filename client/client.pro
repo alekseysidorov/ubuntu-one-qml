@@ -26,6 +26,8 @@ symbian:TARGET.CAPABILITY += NetworkServices
 # Add dependency to symbian components
 # CONFIG += qtquickcomponents
 
+include(../qmlbinding/qmlbinding.pri)
+
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp
 

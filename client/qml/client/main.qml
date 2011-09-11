@@ -1,5 +1,4 @@
 import QtQuick 1.0
-import QuickEvernote 0.1
 
 Rectangle {
     width: 360
