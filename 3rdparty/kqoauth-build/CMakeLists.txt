@@ -13,21 +13,19 @@ wrap_cpp(MOC_SRC ${HDR})
 qt4_wrap_ui(UIS_H ${FORMS})
 
 # This project will generate library
-add_library(kqouath STATIC ${SRC} ${MOC_SRC} ${HDR} ${UIS_H})
+add_library(kqoauth STATIC ${SRC} ${MOC_SRC} ${HDR} ${UIS_H})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-update_compiler_flags(kqouath)
+update_compiler_flags(kqoauth)
 
-set_target_properties(kqouath PROPERTIES COMPILE_FLAGS "${COMPILER_FLAGS}")
-
-target_link_libraries(kqouath
+target_link_libraries(kqoauth
 	${QT_LIBRARIES}
 	)
 
-install(TARGETS kqouath
+install(TARGETS kqoauth
 	RUNTIME DESTINATION ${BIN_DIR_DEF}
 	LIBRARY DESTINATION lib${LIB_SUFFIX}
 	ARCHIVE DESTINATION lib${LIB_SUFFIX}
