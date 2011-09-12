@@ -1,1 +1,1 @@
-add_subdirectory(kqoauth-build)
+add_subdirectory(libevernote)

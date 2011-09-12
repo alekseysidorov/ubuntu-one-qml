@@ -13,7 +13,7 @@ wrap_cpp(MOC_SRC ${HDR})
 qt4_wrap_ui(UIS_H ${FORMS})
 
 # This project will generate library
-add_library(kqoauth STATIC ${SRC} ${MOC_SRC} ${HDR} ${UIS_H})
+add_library(kqoauth SHARED ${SRC} ${MOC_SRC} ${HDR} ${UIS_H})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}

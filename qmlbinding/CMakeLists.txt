@@ -16,8 +16,8 @@ add_library(qmlbinding MODULE ${SRC} ${MOC_SRC} ${HDR} ${UIS_H})
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
 	.
 	..
-	../3rdparty
 	${CMAKE_CURRENT_SOURCE_DIR}
+	../3rdparty/libevernote/
 )
 
 if(MSVC)
@@ -33,7 +33,7 @@ endif()
 set_target_properties(qmlbinding PROPERTIES COMPILE_FLAGS "${COMPILER_FLAGS}")
 
 target_link_libraries(qmlbinding
-	kqoauth
+	libevernote
 	${QT_LIBRARIES}
 	)
 

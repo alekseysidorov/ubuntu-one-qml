@@ -11,7 +11,11 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            Qt.quit();
+			evernoteAuth.login();
         }
     }
+
+	Auth {
+		id: evernoteAuth
+	}
 }
