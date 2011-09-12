@@ -18,23 +18,15 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 	..
 	${CMAKE_CURRENT_SOURCE_DIR}
 	../3rdparty/libevernote/
+	${THRIFT_INCLUDE_DIRS}
 )
 
-if(MSVC)
-	list(APPEND COMPILER_FLAGS "/W3")
-else()
-	list(APPEND COMPILER_FLAGS "-Wall -Wextra -Wnon-virtual-dtor")
-	if(NOT WIN32)
-		#TODO возможно стоит использовать чекалку аттрибута -fvisibility
-		set(COMPILER_FLAGS "${COMPILER_FLAGS} -fvisibility=hidden")
-	endif(NOT WIN32)
-endif()
-
-set_target_properties(qmlbinding PROPERTIES COMPILE_FLAGS "${COMPILER_FLAGS}")
+update_compiler_flags(qmlbinding)
 
 target_link_libraries(qmlbinding
 	libevernote
 	${QT_LIBRARIES}
+	${THRIFT_LIBRARIES}
 	)
 
 add_custom_command(

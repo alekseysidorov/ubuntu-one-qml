@@ -3,6 +3,16 @@
 
 #include <QObject>
 
+class AuthWorker : public QObject
+{
+	Q_OBJECT
+public:
+	AuthWorker(QObject *parent = 0);
+
+signals:
+	void finished();
+};
+
 class EvernoteAuth : public QObject
 {
     Q_OBJECT

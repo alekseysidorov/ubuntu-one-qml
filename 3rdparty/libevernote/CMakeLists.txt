@@ -1,11 +1,7 @@
 project(libevernote)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
 find_package(Thrift REQUIRED)
-
 message(STATUS "Searching libevernote sources and headers")
-
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 # Search for source and headers in source directory
 file(GLOB_RECURSE SRC "${SRC_DIR}/*.cpp")
