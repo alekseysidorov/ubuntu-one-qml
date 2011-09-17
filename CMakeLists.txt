@@ -25,7 +25,7 @@ else()
 endif()
 
 include(UseQt4)
-include(EvernoteQmlMacro)
+include(MyMacro)
 
 set(QT_MIN_VERSION "4.7.4")
 

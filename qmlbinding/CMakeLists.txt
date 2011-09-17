@@ -24,7 +24,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 update_compiler_flags(qmlbinding)
 
 target_link_libraries(qmlbinding
-	libevernote
+        kqoauth
 	${QT_LIBRARIES}
 	${THRIFT_LIBRARIES}
 	)
