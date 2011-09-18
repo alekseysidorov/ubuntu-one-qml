@@ -1,5 +1,5 @@
 import QtQuick 1.0
-import EvernoteAPI 0.1
+import UbuntuOne 0.1
 
 Rectangle {
     width: 360
@@ -11,11 +11,11 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-			evernoteAuth.login();
+			auth.login();
         }
     }
 
 	Auth {
-		id: evernoteAuth
+		id: auth
 	}
 }

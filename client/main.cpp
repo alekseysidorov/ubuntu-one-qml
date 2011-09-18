@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 	QDir dir("../qmlbinding");
 	foreach (QString plugin, dir.entryList()) {
 		QString error;
-		viewer.engine()->importPlugin(dir.absoluteFilePath(plugin), QLatin1String("EvernoteAPI"), &error);
+		viewer.engine()->importPlugin(dir.absoluteFilePath(plugin), QLatin1String("UbuntuOne"), &error);
 		qDebug() << error << dir.absoluteFilePath(plugin);
 	}
 

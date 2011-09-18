@@ -1,5 +1,5 @@
 #include "qmlbinding.h"
-#include "evernoteauth.h"
+#include "auth.h"
 #include <QtDeclarative>
 
 #include <QDebug>
@@ -11,8 +11,8 @@ QmlBinding::QmlBinding()
 
 void QmlBinding::registerTypes(const char *uri)
 {
-	Q_ASSERT(uri == QLatin1String("EvernoteAPI"));
-	qmlRegisterType<EvernoteAuth>(uri, 0, 1, "Auth");
+	Q_ASSERT(uri == QLatin1String("UbuntuOne"));
+	qmlRegisterType<Auth>(uri, 0, 1, "Auth");
 }
 
 Q_EXPORT_PLUGIN2(qmlbinding, QmlBinding)

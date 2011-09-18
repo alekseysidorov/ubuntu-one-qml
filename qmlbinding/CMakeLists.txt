@@ -17,16 +17,16 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 	.
 	..
 	${CMAKE_CURRENT_SOURCE_DIR}
-	../3rdparty/libevernote/
-	${THRIFT_INCLUDE_DIRS}
+	../3rdparty/kqoauth/src
+	../3rdparty/k8json-build/
 )
 
 update_compiler_flags(qmlbinding)
 
 target_link_libraries(qmlbinding
-        kqoauth
+	kqoauth
+	k8json
 	${QT_LIBRARIES}
-	${THRIFT_LIBRARIES}
 	)
 
 add_custom_command(
