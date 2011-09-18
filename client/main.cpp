@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
 
 	viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 	viewer.setMainQmlFile(QLatin1String("qml/client/main.qml"));
+	viewer.setMinimumSize(300, 400);
 	viewer.showExpanded();
 	return app.exec();
 }

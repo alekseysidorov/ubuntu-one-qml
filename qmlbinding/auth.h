@@ -6,8 +6,7 @@
 class QAuthenticator;
 class QNetworkReply;
 class QNetworkAccessManager;
-class KQOAuthManager;
-class KQOAuthRequest;
+class QUrl;
 
 class AuthPrivate;
 class Auth : public QObject
@@ -37,13 +36,18 @@ signals:
 private slots:
 	void authenticationRequired(QNetworkReply *reply,QAuthenticator *auth);
 	void authReplyFinished();
+	void onConfirmReplyFinished();
+	void onTestReplyFinished();
 private:
+	QNetworkReply *get(const QUrl &);
+
 	QString m_userName;
 	QString m_machineName;
 	QString m_password;
-
-	//KQOAuthManager *m_manager;
-	//KQOAuthRequest *m_request;
+	QByteArray m_token;
+	QByteArray m_tokenSecret;
+	QByteArray m_consumerKey;
+	QByteArray m_consumerSecret;
 	QNetworkAccessManager *m_manager;
 };
 

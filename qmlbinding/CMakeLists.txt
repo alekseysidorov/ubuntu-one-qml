@@ -10,6 +10,9 @@ set(QMLDIR "${CMAKE_CURRENT_SOURCE_DIR}/qmldir")
 wrap_cpp(MOC_SRC ${HDR})
 qt4_wrap_ui(UIS_H ${FORMS})
 
+find_package(QCA2 REQUIRED)
+find_package(QOAuth REQUIRED)
+
 # This project will generate library
 add_library(qmlbinding MODULE ${SRC} ${MOC_SRC} ${HDR} ${UIS_H})
 
@@ -17,16 +20,17 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 	.
 	..
 	${CMAKE_CURRENT_SOURCE_DIR}
-	../3rdparty/kqoauth/src
+	${QCA2_INCLUDE_DIR}
+	${QOAuth_INCLUDE_DIR}
 	../3rdparty/k8json-build/
 )
 
 update_compiler_flags(qmlbinding)
 
 target_link_libraries(qmlbinding
-	kqoauth
 	k8json
 	${QT_LIBRARIES}
+	${QOAuth_LIBRARIES}
 	)
 
 add_custom_command(

@@ -16,13 +16,12 @@
 class QmlApplicationViewer : public QDeclarativeView
 {
     Q_OBJECT
-
 public:
     enum ScreenOrientation {
         ScreenOrientationLockPortrait,
         ScreenOrientationLockLandscape,
         ScreenOrientationAuto
-    };
+	};
 
     explicit QmlApplicationViewer(QWidget *parent = 0);
     virtual ~QmlApplicationViewer();
