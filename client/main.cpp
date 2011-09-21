@@ -9,6 +9,10 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+	app.setApplicationName("UbuntuOneQuick");
+	app.setApplicationVersion("0.1");
+	app.setOrganizationName("Stranger");
+	app.setOrganizationDomain("http://co-de.org");
 
 	QmlApplicationViewer viewer;
 
@@ -18,6 +22,8 @@ int main(int argc, char *argv[])
 		QString error;
 		viewer.engine()->importPlugin(dir.absoluteFilePath(plugin), QLatin1String("UbuntuOne"), &error);
 		qDebug() << error << dir.absoluteFilePath(plugin);
+		auto lambda = [&error](){ qDebug() << error; };
+		lambda();
 	}
 
 	viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);

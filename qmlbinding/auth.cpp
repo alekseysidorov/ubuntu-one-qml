@@ -1,4 +1,6 @@
 #include "auth.h"
+#include "notes.h"
+
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <qauthenticator.h>
@@ -7,23 +9,44 @@
 #include <QDebug>
 #include <json.h>
 #include <QtOAuth>
+#include <QSettings>
 
 Auth::Auth(QObject *parent) :
 	QObject(parent),
 	m_manager(new QNetworkAccessManager(this))
 {
 	connect(m_manager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(authenticationRequired(QNetworkReply*,QAuthenticator*)));
+
+	QSettings settings;
+	settings.beginGroup("token");
+	//TODO use encrypted storage instead
+	m_consumerKey = settings.value("consumerKey").toByteArray();
+	m_consumerSecret = settings.value("consumerSecret").toByteArray();
+	m_token = settings.value("token").toByteArray();
+	m_tokenSecret = settings.value("tokenSecret").toByteArray();
+	settings.endGroup();
 }
 
-void Auth::login()
+void Auth::requestToken(const QString &userName, const QString &password)
 {
 	QUrl url("https://login.ubuntu.com/api/1.0/authentications");
 	url.addQueryItem(QLatin1String("ws.op"), QLatin1String("authenticate"));
-	url.addQueryItem(QLatin1String("token_name"), QLatin1Literal("Ubuntu One ") % m_machineName);
+	url.addQueryItem(QLatin1String("token_name"), QLatin1Literal("Ubuntu One @ ") % m_machineName);
+
+	qDebug() << url.toEncoded();
+
 	QNetworkRequest request(url);
 	QNetworkReply *reply = m_manager->get(request);
+	reply->setProperty("userName", userName);
+	reply->setProperty("password", password);
 
 	connect(reply, SIGNAL(finished()), SLOT(authReplyFinished()));
+}
+
+void Auth::test()
+{
+	QUrl url("https://one.ubuntu.com/notes/api/1.0/user/");
+	connect(get(url), SIGNAL(finished()), SLOT(onTestReplyFinished()));
 }
 
 QString Auth::machineName() const
@@ -31,15 +54,6 @@ QString Auth::machineName() const
 	return m_machineName;
 }
 
-QString Auth::password() const
-{
-	return m_password;
-}
-
-QString Auth::userName() const
-{
-	return m_userName;
-}
 
 void Auth::setMachineName(const QString &machine)
 {
@@ -47,22 +61,10 @@ void Auth::setMachineName(const QString &machine)
 	emit machineNameChanged();
 }
 
-void Auth::setPassword(const QString &password)
-{
-	m_password = password;
-	emit passwordChanged();
-}
-
-void Auth::setUserName(const QString &name)
-{
-	m_userName = name;
-	emit userNameChanged();
-}
-
 void Auth::authenticationRequired(QNetworkReply *reply, QAuthenticator *auth)
 {
-	auth->setUser(m_userName);
-	auth->setPassword(m_password);
+	auth->setUser(reply->property("userName").toString());
+	auth->setPassword(reply->property("password").toString());
 }
 
 void Auth::authReplyFinished()
@@ -75,7 +77,7 @@ void Auth::authReplyFinished()
 	m_consumerKey = response.value("consumer_key").toByteArray();
 	m_consumerSecret = response.value("consumer_secret").toByteArray();
 
-	QUrl url("https://one.ubuntu.com/oauth/sso-finished-so-get-tokens/" + m_userName);
+	QUrl url("https://one.ubuntu.com/oauth/sso-finished-so-get-tokens/" + reply->property("userName").toString());
 	qDebug() << url.toEncoded();
 	connect(get(url), SIGNAL(finished()), SLOT(onConfirmReplyFinished()));
 }
@@ -83,9 +85,19 @@ void Auth::authReplyFinished()
 void Auth::onConfirmReplyFinished()
 {
 	QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-	qDebug() << reply->readAll();
-	QUrl url("https://one.ubuntu.com/api/account/");
-	connect(get(url), SIGNAL(finished()), SLOT(onTestReplyFinished()));
+	if (reply->readAll().contains("ok")) {
+		emit receivedToken();
+
+		QSettings settings;
+		settings.beginGroup("token");
+		settings.setValue("consumerKey", m_consumerKey);
+		settings.setValue("consumerSecret", m_consumerSecret);
+		settings.setValue("token", m_token);
+		settings.setValue("tokenSecret", m_tokenSecret);
+		settings.endGroup();
+
+	} else
+		emit tokenRequestFailed();
 }
 
 QNetworkReply *Auth::get(const QUrl &url)
@@ -105,8 +117,22 @@ QNetworkReply *Auth::get(const QUrl &url)
 void Auth::onTestReplyFinished()
 {
 	QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-	qDebug() << reply->readAll();
-	QVariant variant = Json::parse(reply->readAll());
-	qDebug() << variant;
+	qDebug() << reply->rawHeaderList();
+
+	QByteArray data = reply->readAll();
+	QVariant variant = Json::parse(data);
+	qDebug() << data;
+}
+
+bool Auth::hasToken() const
+{
+	return !m_token.isEmpty();
+}
+
+Notes *Auth::notes()
+{
+	if (!m_notes)
+		m_notes = new Notes(this);
+	return m_notes.data();
 }
 

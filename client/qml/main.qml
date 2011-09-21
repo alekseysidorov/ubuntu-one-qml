@@ -7,8 +7,11 @@ Rectangle {
 	height: 400
 
 	Frame {
+		id: tokenRequestWindow
+
 		anchors.fill: parent
 		anchors.margins: 5
+		visible: false
 
 		Column {
 			anchors.centerIn: parent
@@ -40,16 +43,38 @@ Rectangle {
 				id: loginBtn
 				text: qsTr("Login")
 				defaultbutton: true
-				onClicked: auth.login();
+				onClicked: auth.requestToken(loginInput.text, passwdInput.text);
 			}
 		}
 	}
 
+	Button {
+		id: testButton
+		text: qsTr("Test")
+		visible: false
+		onClicked: auth.test();
+	}
+
 	Auth {
 		id: auth
-		userName: loginInput.text
-		password: passwdInput.text
 		machine: "Robinhood"
+
+		Component.onCompleted: {
+			if (auth.hasToken)
+				testButton.visible = true;
+			else {
+				tokenRequestWindow.visible = true;
+			}
+		}
+
+		onTokenRequestFailed: {
+			testButton.visible = false;
+			tokenRequestWindow.visible = true;
+		}
+		onReceivedToken: {
+			testButton.visible = true;
+			tokenRequestWindow.visible = false;
+		}
 	}
 }
 
