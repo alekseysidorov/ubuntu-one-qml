@@ -15,7 +15,9 @@ Auth::Auth(QObject *parent) :
 	QObject(parent),
 	m_manager(new QNetworkAccessManager(this))
 {
-	connect(m_manager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(authenticationRequired(QNetworkReply*,QAuthenticator*)));
+	connect(m_manager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
+			SLOT(authenticationRequired(QNetworkReply*,QAuthenticator*)));
+	connect(m_manager, SIGNAL(finished(QNetworkReply*)), SLOT(onReplyFinished(QNetworkReply*)));
 
 	QSettings settings;
 	settings.beginGroup("token");
@@ -45,7 +47,7 @@ void Auth::requestToken(const QString &userName, const QString &password)
 
 void Auth::test()
 {
-	QUrl url("https://one.ubuntu.com/notes/api/1.0/user/");
+	QUrl url("https://one.ubuntu.com/api/account/");
 	connect(get(url), SIGNAL(finished()), SLOT(onTestReplyFinished()));
 }
 
@@ -95,7 +97,7 @@ void Auth::onConfirmReplyFinished()
 		settings.setValue("token", m_token);
 		settings.setValue("tokenSecret", m_tokenSecret);
 		settings.endGroup();
-
+		test();
 	} else
 		emit tokenRequestFailed();
 }
@@ -108,10 +110,22 @@ QNetworkReply *Auth::get(const QUrl &url)
 	QByteArray header = oauth.createParametersString(url.toEncoded(), QOAuth::GET, m_token, m_tokenSecret,
 										QOAuth::HMAC_SHA1, QOAuth::ParamMap(),
 										QOAuth::ParseForHeaderArguments);
-	qDebug() << header;
 	QNetworkRequest request(url);
 	request.setRawHeader("Authorization", header);
 	return m_manager->get(request);
+}
+
+QNetworkReply * Auth::put(const QUrl &url, const QByteArray &data)
+{
+	QOAuth::Interface oauth;
+	oauth.setConsumerKey(m_consumerKey);
+	oauth.setConsumerSecret(m_consumerSecret);
+	QByteArray header = oauth.createParametersString(url.toEncoded(), QOAuth::GET, m_token, m_tokenSecret,
+										QOAuth::HMAC_SHA1, QOAuth::ParamMap(),
+										QOAuth::ParseForHeaderArguments);
+	QNetworkRequest request(url);
+	request.setRawHeader("Authorization", header);
+	return m_manager->put(request, data);
 }
 
 void Auth::onTestReplyFinished()
@@ -134,5 +148,13 @@ Notes *Auth::notes()
 	if (!m_notes)
 		m_notes = new Notes(this);
 	return m_notes.data();
+}
+
+void Auth::onReplyFinished(QNetworkReply *reply)
+{
+	qDebug() << reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+	QString r = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
+	if (!r.isEmpty())
+		emit redirect(r);
 }
 

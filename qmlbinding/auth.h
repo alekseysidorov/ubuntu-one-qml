@@ -23,8 +23,10 @@ public:
 	void setMachineName(const QString &machine);
 	QString machineName() const;
 	bool hasToken() const;
-	QNetworkReply *get(const QUrl &);
 	Notes *notes();
+
+	QNetworkReply *get(const QUrl &);
+	QNetworkReply *put(const QUrl &, const QByteArray &data);
 public slots:
 	void requestToken(const QString &userName, const QString &password);
 	void test();
@@ -33,11 +35,13 @@ signals:
 	void tokenRequestFailed();
 	void machineNameChanged();
 	void tokenRequested();
+	void redirect(const QString &url);
 private slots:
 	void authenticationRequired(QNetworkReply *reply, QAuthenticator *auth);
 	void authReplyFinished();
 	void onConfirmReplyFinished();
 	void onTestReplyFinished();
+	void onReplyFinished(QNetworkReply*);
 private:
 	QString m_machineName;
 	QByteArray m_token;

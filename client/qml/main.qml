@@ -1,6 +1,7 @@
 import QtQuick 1.0
 import UbuntuOne 0.1
 import QtDesktop 0.1
+import QtWebKit 1.0
 
 Rectangle {
 	width: 300
@@ -48,11 +49,27 @@ Rectangle {
 		}
 	}
 
-	Button {
-		id: testButton
-		text: qsTr("Test")
+	Frame {
+		id: test
+
+		anchors.fill: parent
+		anchors.margins: 5
 		visible: false
-		onClicked: auth.test();
+
+		Button {
+			id: testButton
+			text: qsTr("Test")
+			onClicked: auth.notes.sync();
+		}
+
+		WebView {
+			id: view
+			anchors.top: testButton.bottom
+			anchors.left: parent.left
+			anchors.right: parent.right
+			anchors.bottom: parent.bottom
+			anchors.margins: 10
+		}
 	}
 
 	Auth {
@@ -61,19 +78,22 @@ Rectangle {
 
 		Component.onCompleted: {
 			if (auth.hasToken)
-				testButton.visible = true;
+				test.visible = true;
 			else {
 				tokenRequestWindow.visible = true;
 			}
 		}
 
 		onTokenRequestFailed: {
-			testButton.visible = false;
+			test.visible = false;
 			tokenRequestWindow.visible = true;
 		}
 		onReceivedToken: {
-			testButton.visible = true;
+			test.visible = true;
 			tokenRequestWindow.visible = false;
+		}
+		onRedirect: {
+			view.url = url;
 		}
 	}
 }
