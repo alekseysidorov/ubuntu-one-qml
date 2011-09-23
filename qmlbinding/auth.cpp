@@ -13,20 +13,25 @@
 
 Auth::Auth(QObject *parent) :
 	QObject(parent),
-	m_manager(new QNetworkAccessManager(this))
+	m_manager(new QNetworkAccessManager(this)),
+	m_oauth(new QOAuth::Interface(this))
 {
 	connect(m_manager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
-			SLOT(authenticationRequired(QNetworkReply*,QAuthenticator*)));
+			SLOT(onAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
 	connect(m_manager, SIGNAL(finished(QNetworkReply*)), SLOT(onReplyFinished(QNetworkReply*)));
 
 	QSettings settings;
 	settings.beginGroup("token");
 	//TODO use encrypted storage instead
-	m_consumerKey = settings.value("consumerKey").toByteArray();
-	m_consumerSecret = settings.value("consumerSecret").toByteArray();
+	m_oauth->setConsumerKey(settings.value("consumerKey").toByteArray());
+	m_oauth->setConsumerSecret(settings.value("consumerSecret").toByteArray());
+
 	m_token = settings.value("token").toByteArray();
 	m_tokenSecret = settings.value("tokenSecret").toByteArray();
 	settings.endGroup();
+
+	if (hasToken())
+		test();
 }
 
 void Auth::requestToken(const QString &userName, const QString &password)
@@ -42,7 +47,7 @@ void Auth::requestToken(const QString &userName, const QString &password)
 	reply->setProperty("userName", userName);
 	reply->setProperty("password", password);
 
-	connect(reply, SIGNAL(finished()), SLOT(authReplyFinished()));
+	connect(reply, SIGNAL(finished()), SLOT(onAuthReplyFinished()));
 }
 
 void Auth::test()
@@ -63,21 +68,21 @@ void Auth::setMachineName(const QString &machine)
 	emit machineNameChanged();
 }
 
-void Auth::authenticationRequired(QNetworkReply *reply, QAuthenticator *auth)
+void Auth::onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *auth)
 {
 	auth->setUser(reply->property("userName").toString());
 	auth->setPassword(reply->property("password").toString());
 }
 
-void Auth::authReplyFinished()
+void Auth::onAuthReplyFinished()
 {
 	QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 	QVariantMap response = Json::parse(reply->readAll()).toMap();
 	qDebug() << response;
 	m_token = response.value("token").toByteArray();
 	m_tokenSecret = response.value("token_secret").toByteArray();
-	m_consumerKey = response.value("consumer_key").toByteArray();
-	m_consumerSecret = response.value("consumer_secret").toByteArray();
+	m_oauth->setConsumerKey(response.value("consumer_key").toByteArray());
+	m_oauth->setConsumerSecret(response.value("consumer_secret").toByteArray());
 
 	QUrl url("https://one.ubuntu.com/oauth/sso-finished-so-get-tokens/" + reply->property("userName").toString());
 	qDebug() << url.toEncoded();
@@ -92,8 +97,8 @@ void Auth::onConfirmReplyFinished()
 
 		QSettings settings;
 		settings.beginGroup("token");
-		settings.setValue("consumerKey", m_consumerKey);
-		settings.setValue("consumerSecret", m_consumerSecret);
+		settings.setValue("consumerKey", m_oauth->consumerKey());
+		settings.setValue("consumerSecret", m_oauth->consumerSecret());
 		settings.setValue("token", m_token);
 		settings.setValue("tokenSecret", m_tokenSecret);
 		settings.endGroup();
@@ -104,23 +109,20 @@ void Auth::onConfirmReplyFinished()
 
 QNetworkReply *Auth::get(const QUrl &url)
 {
-	QOAuth::Interface oauth;
-	oauth.setConsumerKey(m_consumerKey);
-	oauth.setConsumerSecret(m_consumerSecret);
-	QByteArray header = oauth.createParametersString(url.toEncoded(), QOAuth::GET, m_token, m_tokenSecret,
+	QByteArray header = m_oauth->createParametersString(url.toEncoded(), QOAuth::GET, m_token, m_tokenSecret,
 										QOAuth::HMAC_SHA1, QOAuth::ParamMap(),
-										QOAuth::ParseForHeaderArguments);
-	QNetworkRequest request(url);
-	request.setRawHeader("Authorization", header);
+										QOAuth::ParseForInlineQuery);
+
+	QByteArray data = url.toEncoded().append(header);
+	qDebug() << data;
+	QNetworkRequest request(QUrl::fromEncoded(data));
+	//request.setRawHeader("Authorization", header);
 	return m_manager->get(request);
 }
 
-QNetworkReply * Auth::put(const QUrl &url, const QByteArray &data)
+QNetworkReply *Auth::put(const QUrl &url, const QByteArray &data)
 {
-	QOAuth::Interface oauth;
-	oauth.setConsumerKey(m_consumerKey);
-	oauth.setConsumerSecret(m_consumerSecret);
-	QByteArray header = oauth.createParametersString(url.toEncoded(), QOAuth::GET, m_token, m_tokenSecret,
+	QByteArray header = m_oauth->createParametersString(url.toEncoded(), QOAuth::GET, m_token, m_tokenSecret,
 										QOAuth::HMAC_SHA1, QOAuth::ParamMap(),
 										QOAuth::ParseForHeaderArguments);
 	QNetworkRequest request(url);
@@ -131,10 +133,8 @@ QNetworkReply * Auth::put(const QUrl &url, const QByteArray &data)
 void Auth::onTestReplyFinished()
 {
 	QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-	qDebug() << reply->rawHeaderList();
 
 	QByteArray data = reply->readAll();
-	QVariant variant = Json::parse(data);
 	qDebug() << data;
 }
 
@@ -156,5 +156,13 @@ void Auth::onReplyFinished(QNetworkReply *reply)
 	QString r = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
 	if (!r.isEmpty())
 		emit redirect(r);
+}
+
+void Auth::getApiRefs()
+{
+}
+
+void Auth::onApiRefsReceived()
+{
 }
 

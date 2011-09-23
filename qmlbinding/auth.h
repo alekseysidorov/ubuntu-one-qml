@@ -9,6 +9,10 @@ class QNetworkReply;
 class QNetworkAccessManager;
 class QUrl;
 
+namespace QOAuth {
+class Interface;
+}
+
 class Notes;
 class AuthPrivate;
 class Auth : public QObject
@@ -37,18 +41,20 @@ signals:
 	void tokenRequested();
 	void redirect(const QString &url);
 private slots:
-	void authenticationRequired(QNetworkReply *reply, QAuthenticator *auth);
-	void authReplyFinished();
+	void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *auth);
+	void onAuthReplyFinished();
 	void onConfirmReplyFinished();
 	void onTestReplyFinished();
 	void onReplyFinished(QNetworkReply*);
+	void onApiRefsReceived();
+protected:
+	void getApiRefs();
 private:
 	QString m_machineName;
 	QByteArray m_token;
 	QByteArray m_tokenSecret;
-	QByteArray m_consumerKey;
-	QByteArray m_consumerSecret;
 	QNetworkAccessManager *m_manager;
+	QOAuth::Interface *m_oauth;
 	QWeakPointer<Notes> m_notes;
 };
 
