@@ -1,36 +1,34 @@
 project(qmlbinding)
 
 message(STATUS "Searching qmlbinding sources and headers")
+
+set(QMLDIR "${CMAKE_CURRENT_SOURCE_DIR}/qmldir")
+
 # Search for source and headers in source directory
 file(GLOB_RECURSE SRC "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE HDR "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
-file(GLOB_RECURSE FORMS "${CMAKE_CURRENT_SOURCE_DIR}/*.ui" )
-set(QMLDIR "${CMAKE_CURRENT_SOURCE_DIR}/qmldir")
+file(GLOB_RECURSE QML "${QMLDIR}/*.*")
 
 wrap_cpp(MOC_SRC ${HDR})
-qt4_wrap_ui(UIS_H ${FORMS})
-
-find_package(QCA2 REQUIRED)
-find_package(QOAuth REQUIRED)
 
 # This project will generate library
-add_library(qmlbinding MODULE ${SRC} ${MOC_SRC} ${HDR} ${UIS_H})
+add_library(qmlbinding MODULE ${SRC} ${MOC_SRC} ${HDR} ${QML})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
-	.
-	..
-	${CMAKE_CURRENT_SOURCE_DIR}
-	${QCA2_INCLUDE_DIR}
-	${QOAuth_INCLUDE_DIR}
-	../3rdparty/k8json-build/
+    .
+    ..
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ../3rdparty/k8json-build/
+    ../3rdparty/qoauth/include
+    ${QCA2_INCLUDE_DIR}
 )
 
 update_compiler_flags(qmlbinding)
 
 target_link_libraries(qmlbinding
 	k8json
+	qoauth
 	${QT_LIBRARIES}
-	${QOAuth_LIBRARIES}
 	)
 
 add_custom_command(
@@ -41,7 +39,7 @@ add_custom_command(
 )
 
 set(QT_DECLARATIVE_IMPORT imports)
-set(IMPORT_DESTINATION ${QT_DECLARATIVE_IMPORT}/evernote)
+set(IMPORT_DESTINATION ${QT_DECLARATIVE_IMPORT}/ubuntuOne)
 
 install(TARGETS qmlbinding
 	LIBRARY DESTINATION ${IMPORT_DESTINATION}
