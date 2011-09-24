@@ -1,5 +1,6 @@
 #include "auth.h"
 #include "notes.h"
+#include "account.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -29,9 +30,6 @@ Auth::Auth(QObject *parent) :
 	m_token = settings.value("token").toByteArray();
 	m_tokenSecret = settings.value("tokenSecret").toByteArray();
 	settings.endGroup();
-
-	if (hasToken())
-		test();
 }
 
 void Auth::requestToken(const QString &userName, const QString &password)
@@ -102,7 +100,6 @@ void Auth::onConfirmReplyFinished()
 		settings.setValue("token", m_token);
 		settings.setValue("tokenSecret", m_tokenSecret);
 		settings.endGroup();
-		test();
 	} else
 		emit tokenRequestFailed();
 }
@@ -148,6 +145,13 @@ Notes *Auth::notes()
 	if (!m_notes)
 		m_notes = new Notes(this);
 	return m_notes.data();
+}
+
+Account * Auth::account()
+{
+	if (!m_account)
+		m_account = new Account(this);
+	return m_account.data();
 }
 
 void Auth::onReplyFinished(QNetworkReply *reply)

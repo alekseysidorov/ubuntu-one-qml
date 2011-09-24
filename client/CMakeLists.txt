@@ -13,7 +13,7 @@ wrap_cpp(MOC_SRC ${HDR})
 qt4_wrap_ui(UIS_H ${FORMS})
 
 # This project will generate library
-add_executable(client ${SRC} ${MOC_SRC} ${HDR} ${UIS_H} ${QML_DIR} ${QML})
+add_executable(client ${SRC} ${MOC_SRC} ${HDR} ${UIS_H} ${QML_DIR})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
 	.
@@ -28,8 +28,13 @@ target_link_libraries(client
 	${QT_LIBRARIES}
 	)
 
+add_custom_target(qml-desktop
+	ALL
+	DEPENDS ${QML}
+)
+
 add_custom_command(
-	TARGET		client
+	TARGET		qml-desktop
 	POST_BUILD
 	COMMAND		${CMAKE_COMMAND}
 	ARGS		-E copy_directory "${QML_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/qml/client"

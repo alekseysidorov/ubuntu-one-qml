@@ -56,19 +56,42 @@ Rectangle {
 		anchors.margins: 5
 		visible: false
 
-		Button {
-			id: testButton
-			text: qsTr("Test")
-			onClicked: auth.notes.sync();
+		Column {
+			anchors.centerIn: parent
+
+			spacing: 5
+
+			Button {
+				id: testButton
+				text: qsTr("Test")
+				onClicked: auth.account.updateInfo();
+			}
+
+			Text {
+				id: userName
+			}
+
 		}
 
-		WebView {
-			id: view
-			anchors.top: testButton.bottom
-			anchors.left: parent.left
-			anchors.right: parent.right
-			anchors.bottom: parent.bottom
-			anchors.margins: 10
+		//WebView {
+		//	id: view
+		//	anchors.top: testButton.bottom
+		//	anchors.left: parent.left
+		//	anchors.right: parent.right
+		//	anchors.bottom: parent.bottom
+		//	anchors.margins: 10
+		//}
+	}
+
+	Connections {
+		target: auth.account
+		onInfoUpdated: {
+			var text = "";
+			for (var p in info) {
+				text = text + p + " : " + info[p] + "\n ";
+				console.log(p);
+			}
+			userName.text = text;
 		}
 	}
 
@@ -96,5 +119,7 @@ Rectangle {
 			view.url = url;
 		}
 	}
+
+
 }
 
