@@ -40,6 +40,20 @@ add_custom_command(
 	ARGS		-E copy_directory "${QML_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/qml/client"
 )
 
+if(WIN32)
+        append_target_location(k8json CLIENT_DEPEND_LIBS)
+        append_target_location(qoauth CLIENT_DEPEND_LIBS)
+
+        foreach(_lib ${CLIENT_DEPEND_LIBS})
+                add_custom_command(
+                        TARGET		client
+                        POST_BUILD
+                        COMMAND		${CMAKE_COMMAND}
+                        ARGS		-E copy "${_lib}" "${CMAKE_CURRENT_BINARY_DIR}"
+                )
+        endforeach()
+endif()
+
 install(TARGETS client
 	RUNTIME DESTINATION ${BIN_DIR_DEF}
 	LIBRARY DESTINATION lib${LIB_SUFFIX}

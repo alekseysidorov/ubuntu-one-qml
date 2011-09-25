@@ -57,6 +57,11 @@ macro(UPDATE_COMPILER_FLAGS target)
 	update_cxx_compiler_flag("-stdlib=libc++" LIBCXX)
 	update_cxx_compiler_flag("-fvisibility=hidden" HIDDEN_VISIBILITY)
 
+        get_target_property(${target}_TYPE ${target} TYPE)
+        if (${target}_TYPE STREQUAL "STATIC_LIBRARY")
+            update_cxx_compiler_flag("-fPIC" PIC)
+        endif()
+
 	set_target_properties(${target} PROPERTIES COMPILE_FLAGS "${COMPILER_FLAGS}")
 endmacro()
 
@@ -94,4 +99,10 @@ macro(ADD_SIMPLE_LIBRARY target)
 		LIBRARY DESTINATION lib${LIB_SUFFIX}
 		ARCHIVE DESTINATION lib${LIB_SUFFIX}
 	)
+endmacro()
+
+#Вытаскиваем у таргета location и дописываем в список
+macro(APPEND_TARGET_LOCATION target list)
+        get_target_property(${target}_LOCATION ${target} LOCATION)
+        list(APPEND ${list} ${${target}_LOCATION})
 endmacro()
