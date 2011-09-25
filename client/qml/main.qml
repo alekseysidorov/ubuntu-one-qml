@@ -4,8 +4,8 @@ import QtDesktop 0.1
 import QtWebKit 1.0
 
 Rectangle {
-	width: 300
-	height: 400
+	width: 600
+	height: 800
 
 	Frame {
 		id: tokenRequestWindow
@@ -56,19 +56,28 @@ Rectangle {
 		anchors.margins: 5
 		visible: false
 
-		Column {
-			anchors.centerIn: parent
-
-			spacing: 5
+		Item {
+			anchors.fill: parent
+			anchors.margins: 5
 
 			Button {
 				id: testButton
 				text: qsTr("Test")
-				onClicked: auth.account.updateInfo();
+				onClicked: {
+					progressView.running = true;
+					progressView.title = qsTr("Loading account info...")
+					auth.account.updateInfo();
+				}
 			}
 
-			Text {
-				id: userName
+			AccountView {
+				id: view
+				account: auth.account
+				anchors.bottom: parent.bottom
+				anchors.top: testButton.bottom
+				anchors.left: parent.left
+				anchors.right: parent.right
+				anchors.topMargin: 10
 			}
 
 		}
@@ -83,15 +92,16 @@ Rectangle {
 		//}
 	}
 
-	Connections {
-		target: auth.account
-		onInfoUpdated: {
-			var text = "";
-			for (var p in info) {
-				text = text + p + " : " + info[p] + "\n ";
-				console.log(p);
+	ProgressView {
+		id: progressView
+		anchors.fill: parent
+
+		Connections {
+			target: auth.account
+			onInfoUpdated: {
+				progressView.running = false;
+				progressView.title = "";
 			}
-			userName.text = text;
 		}
 	}
 
