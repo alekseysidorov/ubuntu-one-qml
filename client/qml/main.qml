@@ -4,8 +4,8 @@ import QtDesktop 0.1
 import QtWebKit 1.0
 
 Rectangle {
-	width: 600
-	height: 800
+	width: 400
+	height: 600
 
 	Frame {
 		id: tokenRequestWindow
@@ -14,38 +14,10 @@ Rectangle {
 		anchors.margins: 5
 		visible: false
 
-		Column {
+		LoginDialog {
+			id: loginDialog
 			anchors.centerIn: parent
-
-			spacing: 5
-
-			Text {
-				text: qsTr("Login:")
-
-			}
-
-			TextField {
-				id: loginInput
-				placeholderText: qsTr("Please input email")
-			}
-
-			Text {
-				text: qsTr("Password:")
-			}
-
-
-			TextField {
-				id: passwdInput
-				passwordMode: true
-			}
-
-			Button {
-				anchors.right: parent.right
-				id: loginBtn
-				text: qsTr("Login")
-				defaultbutton: true
-				onClicked: auth.requestToken(loginInput.text, passwdInput.text);
-			}
+			api: auth
 		}
 	}
 
@@ -117,19 +89,25 @@ Rectangle {
 			}
 		}
 
-		onTokenRequestFailed: {
-			test.visible = false;
-			tokenRequestWindow.visible = true;
-		}
-		onReceivedToken: {
-			test.visible = true;
-			tokenRequestWindow.visible = false;
-		}
 		onRedirect: {
 			view.url = url;
 		}
 	}
 
+	Connections {
+		target: loginDialog
+
+		onStarted: {
+			progressView.title = qsTr("Authorization...")
+			progressView.running = true;
+		}
+
+		onFinished: {
+			progressView.running = false;
+			loginDialog.visible = !success
+			test.visible = success;
+		}
+	}
 
 }
 
