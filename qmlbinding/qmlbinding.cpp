@@ -16,7 +16,7 @@ QmlBinding::QmlBinding()
 void QmlBinding::registerTypes(const char *uri)
 {
 	Q_ASSERT(uri == QLatin1String("UbuntuOne"));
-	qmlRegisterType<Auth>(uri, 0, 1, "Auth");
+	qmlRegisterType<UbuntuOneApi>(uri, 0, 1, "Api");
 	qmlRegisterUncreatableType<Notes>(uri, 0, 1, "Notes", tr("Use auth.notes property"));
 	qmlRegisterUncreatableType<Account>(uri, 0, 1, "Account", tr("Use auth.account property"));
 }

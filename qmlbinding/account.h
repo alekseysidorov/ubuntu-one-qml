@@ -4,13 +4,13 @@
 #include <QObject>
 #include <QVariant>
 
-class Auth;
+class UbuntuOneApi;
 class Account : public QObject
 {
     Q_OBJECT
 	Q_PROPERTY(QVariant info READ info NOTIFY infoUpdated)
 public:
-	explicit Account(Auth *auth);
+	explicit Account(UbuntuOneApi *auth);
 	QVariant info() const;
 public slots:
 	void updateInfo() const;
@@ -19,7 +19,7 @@ signals:
 private slots:
 	void onInfoReceived();
 private:
-	Auth *m_auth;
+	UbuntuOneApi *m_api;
 	QVariant m_info;
 };
 

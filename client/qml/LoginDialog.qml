@@ -36,7 +36,6 @@ Column {
 	TextField {
 		id: loginField
 		placeholderText: qsTr("Please input email")
-		focus: true
 
 		KeyNavigation.tab: passwordField
 	}
@@ -69,18 +68,18 @@ Column {
 		onClicked: {
 			running = true;
 			loginDialog.started();
-			auth.requestToken(loginField.text, passwordField.text);
+			api.requestToken(loginField.text, passwordField.text);
 		}
 	}
 
 	Connections {
-		target: auth
+		target: api
 
-		onTokenRequestFailed: {
+		onAuthorizationFailed: {
 			loginDialog.finished(false);
 		}
 
-		onReceivedToken: {
+		onAuthorized: {
 			loginDialog.finished(true);
 		}
 	}

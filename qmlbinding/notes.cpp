@@ -2,11 +2,12 @@
 #include "auth.h"
 #include <QNetworkReply>
 #include <json.h>
+#include "webkitauth.h"
 
 #include <QDebug>
 
-Notes::Notes(Auth *auth) : QObject(auth),
-	m_auth(auth),
+Notes::Notes(UbuntuOneApi *auth) : QObject(auth),
+	m_api(auth),
 	m_latestSyncRevision(0)
 {
 }
@@ -15,7 +16,7 @@ void Notes::sync()
 {
 	if (m_apiRef.isEmpty()) {
 		QUrl url("https://one.ubuntu.com/notes/api/1.0/user/"); //TODO get ref from auth
-		connect(m_auth->get(url), SIGNAL(finished()), SLOT(apiRefsReceived()));
+		connect(m_api->get(url), SIGNAL(finished()), SLOT(apiRefsReceived()));
 		return;
 	}
 
@@ -23,7 +24,7 @@ void Notes::sync()
 	url.addQueryItem("since", QString::number(m_latestSyncRevision));
 	url.addQueryItem("include_notes", "true");
 	qDebug() << url;
-	connect(m_auth->get(url), SIGNAL(finished()), SLOT(onNotesReceived()));
+	connect(m_api->get(url), SIGNAL(finished()), SLOT(onNotesReceived()));
 }
 
 void Notes::apiRefsReceived()
@@ -47,6 +48,23 @@ void Notes::apiRefsReceived()
 void Notes::onNotesReceived()
 {
 	QByteArray data = static_cast<QNetworkReply*>(sender())->readAll();
-	QVariantMap map = Json::parse(data).toMap();
-	qDebug() << data;
+	if (data.isEmpty())
+		webLogin();
+	else {
+		QVariantMap map = Json::parse(data).toMap();
+		qDebug() << map;
+	}
+}
+
+void Notes::webLogin()
+{
+	WebkitAuth *webAuth = new WebkitAuth(QUrl("https://one.ubuntu.com/auth/login"), m_api->manager());
+	webAuth->show();
+	connect(webAuth, SIGNAL(finished(bool)), SLOT(onWebAuthFinished(bool)));
+}
+
+void Notes::onWebAuthFinished(bool success)
+{
+	if (success)
+		sync();
 }

@@ -3,19 +3,21 @@
 
 #include <QObject>
 
-class Auth;
+class UbuntuOneApi;
 class Notes : public QObject
 {
     Q_OBJECT
 public:
-	explicit Notes(Auth *auth);	
+	explicit Notes(UbuntuOneApi *auth);
 public slots:
 	void sync();
 private slots:
+	void webLogin();
 	void apiRefsReceived();
 	void onNotesReceived();
+	void onWebAuthFinished(bool success);
 private:
-	Auth *m_auth;
+	UbuntuOneApi *m_api;
 	QString m_userName;
 	QString m_firstName;
 	QString m_lastName;

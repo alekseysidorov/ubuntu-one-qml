@@ -16,7 +16,7 @@ class Interface;
 class Notes;
 class Account;
 class AuthPrivate;
-class Auth : public QObject
+class UbuntuOneApi : public QObject
 {
     Q_OBJECT
     
@@ -25,7 +25,7 @@ class Auth : public QObject
 	Q_PROPERTY(Notes *notes READ notes)
 	Q_PROPERTY(Account *account READ account)
 public:
-    explicit Auth(QObject *parent = 0);
+	explicit UbuntuOneApi(QObject *parent = 0);
 	void setMachineName(const QString &machine);
 	QString machineName() const;
 	bool hasToken() const;
@@ -34,24 +34,17 @@ public:
 
 	QNetworkReply *get(const QUrl &);
 	QNetworkReply *put(const QUrl &, const QByteArray &data);
+	QNetworkAccessManager *manager() const;
 public slots:
 	void requestToken(const QString &userName, const QString &password);
-	void test();
 signals:
-	void receivedToken();
-	void tokenRequestFailed();
+	void authorized();
+	void authorizationFailed(const QString &error);
 	void machineNameChanged();
-	void tokenRequested();
-	void redirect(const QString &url);
 private slots:
 	void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *auth);
 	void onAuthReplyFinished();
 	void onConfirmReplyFinished();
-	void onTestReplyFinished();
-	void onReplyFinished(QNetworkReply*);
-	void onApiRefsReceived();
-protected:
-	void getApiRefs();
 private:
 	QString m_machineName;
 	QByteArray m_token;

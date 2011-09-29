@@ -5,15 +5,15 @@
 
 #include <QNetworkReply>
 
-Account::Account(Auth *auth) :
+Account::Account(UbuntuOneApi *auth) :
 	QObject(auth),
-	m_auth(auth)
+	m_api(auth)
 {
 }
 
 void Account::updateInfo() const
 {
-	connect(m_auth->get(QUrl("https://one.ubuntu.com/api/account/")), SIGNAL(finished()),
+	connect(m_api->get(QUrl("https://one.ubuntu.com/api/account/")), SIGNAL(finished()),
 			SLOT(onInfoReceived()));
 }
 

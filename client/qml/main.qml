@@ -17,7 +17,7 @@ Rectangle {
 		LoginDialog {
 			id: loginDialog
 			anchors.centerIn: parent
-			api: auth
+			api: api
 		}
 	}
 
@@ -32,21 +32,36 @@ Rectangle {
 			anchors.fill: parent
 			anchors.margins: 5
 
-			Button {
-				id: testButton
-				text: qsTr("Test")
-				onClicked: {
-					progressView.running = true;
-					progressView.title = qsTr("Loading account info...")
-					auth.account.updateInfo();
+			Row {
+				id: row
+
+				Button {
+					id: testButton
+					text: qsTr("Test account")
+					onClicked: {
+						progressView.running = true;
+						progressView.title = qsTr("Loading account info...")
+						api.account.updateInfo();
+					}
 				}
+
+				Button {
+					id: testButton2
+					text: qsTr("Test notes")
+					onClicked: {
+						progressView.running = true;
+						progressView.title = qsTr("Loading notes...")
+						api.notes.sync();
+					}
+				}
+
 			}
 
 			AccountView {
 				id: view
-				account: auth.account
+				account: api.account
 				anchors.bottom: parent.bottom
-				anchors.top: testButton.bottom
+				anchors.top: row.bottom
 				anchors.left: parent.left
 				anchors.right: parent.right
 				anchors.topMargin: 10
@@ -69,7 +84,7 @@ Rectangle {
 		anchors.fill: parent
 
 		Connections {
-			target: auth.account
+			target: api.account
 			onInfoUpdated: {
 				progressView.running = false;
 				progressView.title = "";
@@ -77,20 +92,16 @@ Rectangle {
 		}
 	}
 
-	Auth {
-		id: auth
+	Api {
+		id: api
 		machine: "Robinhood"
 
 		Component.onCompleted: {
-			if (auth.hasToken)
+			if (api.hasToken)
 				test.visible = true;
 			else {
 				tokenRequestWindow.visible = true;
 			}
-		}
-
-		onRedirect: {
-			view.url = url;
 		}
 	}
 
