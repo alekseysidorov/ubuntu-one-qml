@@ -28,6 +28,8 @@ public:
 	explicit UbuntuOneApi(QObject *parent = 0);
 	void setMachineName(const QString &machine);
 	QString machineName() const;
+	QString email() const;
+	QString pasword() const;
 	bool hasToken() const;
 	Notes *notes();
 	Account *account();
@@ -41,12 +43,15 @@ signals:
 	void authorized();
 	void authorizationFailed(const QString &error);
 	void machineNameChanged();
+	void emailChanged();
 private slots:
 	void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *auth);
 	void onAuthReplyFinished();
 	void onConfirmReplyFinished();
 private:
 	QString m_machineName;
+	QString m_email;
+	QString m_password;
 	QByteArray m_token;
 	QByteArray m_tokenSecret;
 	QNetworkAccessManager *m_manager;

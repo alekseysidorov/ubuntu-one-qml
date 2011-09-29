@@ -5,7 +5,7 @@ Column {
 	id: loginDialog
 
 	property QtObject api
-	property string login : loginField.text
+	property string email : loginField.text
 	property string password
 	property bool running: false
 

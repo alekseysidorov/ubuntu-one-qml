@@ -68,15 +68,6 @@ Rectangle {
 			}
 
 		}
-
-		//WebView {
-		//	id: view
-		//	anchors.top: testButton.bottom
-		//	anchors.left: parent.left
-		//	anchors.right: parent.right
-		//	anchors.bottom: parent.bottom
-		//	anchors.margins: 10
-		//}
 	}
 
 	ProgressView {
