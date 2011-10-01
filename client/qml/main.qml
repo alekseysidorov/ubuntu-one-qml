@@ -4,7 +4,7 @@ import QtDesktop 0.1
 import QtWebKit 1.0
 
 Rectangle {
-	width: 400
+    width: 800
 	height: 600
 
 	Frame {
@@ -32,40 +32,45 @@ Rectangle {
 			anchors.fill: parent
 			anchors.margins: 5
 
-			Row {
-				id: row
+            NotesView {
+                id: notesView
+                notes: api.notes
+            }
 
-				Button {
-					id: testButton
-					text: qsTr("Test account")
-					onClicked: {
-						progressView.running = true;
-						progressView.title = qsTr("Loading account info...")
-						api.account.updateInfo();
-					}
-				}
+//			Row {
+//				id: row
 
-				Button {
-					id: testButton2
-					text: qsTr("Test notes")
-					onClicked: {
-						progressView.running = true;
-						progressView.title = qsTr("Loading notes...")
-						api.notes.sync();
-					}
-				}
+//				Button {
+//					id: testButton
+//					text: qsTr("Test account")
+//					onClicked: {
+//						progressView.running = true;
+//						progressView.title = qsTr("Loading account info...")
+//						api.account.updateInfo();
+//					}
+//				}
 
-			}
+//				Button {
+//					id: testButton2
+//					text: qsTr("Test notes")
+//					onClicked: {
+//						progressView.running = true;
+//						progressView.title = qsTr("Loading notes...")
+//						api.notes.sync();
+//					}
+//				}
 
-			AccountView {
-				id: view
-				account: api.account
-				anchors.bottom: parent.bottom
-				anchors.top: row.bottom
-				anchors.left: parent.left
-				anchors.right: parent.right
-				anchors.topMargin: 10
-			}
+//			}
+
+//			AccountView {
+//				id: view
+//				account: api.account
+//				anchors.bottom: parent.bottom
+//				anchors.top: row.bottom
+//				anchors.left: parent.left
+//				anchors.right: parent.right
+//				anchors.topMargin: 10
+//			}
 
 		}
 	}

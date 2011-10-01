@@ -2,6 +2,7 @@
 #define NOTESMODEL_H
 
 #include <qobjectlistmodel.h>
+#include <QVariant>
 
 class NotesModel : public QObjectListModel
 {

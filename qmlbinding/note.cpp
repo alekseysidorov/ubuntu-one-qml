@@ -1,12 +1,15 @@
 #include "note.h"
+#include "notes.h"
 
-Note::Note(QObject *parent) :
-    QObject(parent)
+Note::Note(Notes *notes) :
+	QObject(notes),
+	m_notes(notes)
 {
 }
 
-Note::Note(const QByteArray &guid, QObject *parent) :
-	QObject(parent),
+Note::Note(const QByteArray &guid, Notes *notes) :
+	QObject(notes),
+	m_notes(notes),
 	m_guid(guid)
 {
 }
@@ -22,14 +25,14 @@ QString Note::title() const
 	return m_title;
 }
 
-void Note::setText(const QString &text)
+void Note::setContent(const QString &text)
 {
-	m_text = text;
+	m_content = text;
 	emit textChanged();
 }
 
-QString Note::text() const
+QString Note::content() const
 {
-	return m_text;
+	return m_content;
 }
 

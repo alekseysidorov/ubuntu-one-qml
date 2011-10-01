@@ -1,4 +1,6 @@
 #include "notes.h"
+#include "note.h"
+#include "notesmodel.h"
 #include "auth.h"
 #include <QNetworkReply>
 #include <json.h>
@@ -12,10 +14,13 @@ Notes::Notes(UbuntuOneApi *auth) : QObject(auth),
 {
 }
 
-NotesModel *Notes::model() const
+NotesModel *Notes::model()
 {
-	//IMPLEMENT ME
-	return 0;
+	if (!m_model) {
+		m_model = new NotesModel(this);
+		emit modelChanged();
+	}
+	return m_model.data();
 }
 
 void Notes::sync()
@@ -58,7 +63,24 @@ void Notes::onNotesReceived()
 		webLogin();
 	else {
 		QVariantMap map = Json::parse(data).toMap();
-		qDebug() << map;
+		int latestSyncRevision = map.value("latest-sync-revision").toInt();
+		QVariantList notes = map.value("notes").toList();
+		QObjectList list;
+		foreach (QVariant value, notes) {
+			QVariantMap data = value.toMap();
+
+			QByteArray guid = data.value("guid").toByteArray();
+			QString title = data.value("title").toString();
+			QString content = data.value("note-content").toString();
+
+			Note *note = new Note(guid, this);
+			note->setTitle(title);
+			note->setContent(content);
+			list.append(note);
+
+			qDebug() << guid << title;
+		}
+		model()->append(list);
 	}
 }
 
