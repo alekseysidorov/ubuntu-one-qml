@@ -3,12 +3,17 @@
 
 #include <QObject>
 
+class NotesModel;
 class UbuntuOneApi;
 class Notes : public QObject
 {
     Q_OBJECT
+	Q_PROPERTY(NotesModel* model READ model NOTIFY modelChanged)
 public:
 	explicit Notes(UbuntuOneApi *auth);
+	NotesModel *model() const;
+signals:
+	void modelChanged();
 public slots:
 	void sync();
 private slots:

@@ -21,9 +21,6 @@ int main(int argc, char *argv[])
 	foreach (QString plugin, dir.entryList()) {
 		QString error;
 		viewer.engine()->importPlugin(dir.absoluteFilePath(plugin), QLatin1String("UbuntuOne"), &error);
-		qDebug() << error << dir.absoluteFilePath(plugin);
-		auto lambda = [&error](){ qDebug() << error; };
-		lambda();
 	}
 
 	viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);

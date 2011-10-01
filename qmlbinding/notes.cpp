@@ -12,6 +12,12 @@ Notes::Notes(UbuntuOneApi *auth) : QObject(auth),
 {
 }
 
+NotesModel *Notes::model() const
+{
+	//IMPLEMENT ME
+	return 0;
+}
+
 void Notes::sync()
 {
 	if (m_apiRef.isEmpty()) {

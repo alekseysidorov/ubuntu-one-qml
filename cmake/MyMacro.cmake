@@ -46,7 +46,7 @@ macro(UPDATE_CXX_COMPILER_FLAG flag name)
 endmacro()
 
 macro(UPDATE_COMPILER_FLAGS target)
-	#get_target_property(COMPILER_FLAGS ${target} COMPILE_FLAGS)
+
 	if(MSVC)
 		list(APPEND COMPILER_FLAGS "/W3")
 	else()
@@ -54,7 +54,9 @@ macro(UPDATE_COMPILER_FLAGS target)
 	endif()
 
 	update_cxx_compiler_flag("-std=c++0x" CXX_0X)
-	update_cxx_compiler_flag("-stdlib=libc++" LIBCXX)
+        if(NOT APPLE)
+                update_cxx_compiler_flag("-stdlib=libc++" LIBCXX)
+        endif()
 	update_cxx_compiler_flag("-fvisibility=hidden" HIDDEN_VISIBILITY)
 
         get_target_property(${target}_TYPE ${target} TYPE)

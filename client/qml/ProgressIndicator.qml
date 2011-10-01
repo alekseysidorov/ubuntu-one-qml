@@ -4,7 +4,7 @@ Image {
 	id: image
 	property bool playing : true
 
-	source: "images/progressindicator.gif"
+    source: "images/busy.png"
 	width: sourceSize.width
 	height: sourceSize.height
 

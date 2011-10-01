@@ -3,16 +3,20 @@ project(qmlbinding)
 message(STATUS "Searching qmlbinding sources and headers")
 
 set(QMLDIR "${CMAKE_CURRENT_SOURCE_DIR}/qmldir")
+set(QML_OBJECT_LIST_DIR ../3rdparty/qml-object-model)
 
 # Search for source and headers in source directory
 file(GLOB_RECURSE SRC "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE HDR "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 file(GLOB_RECURSE QML "${QMLDIR}/*.*")
 
+list(APPEND HDR ${QML_OBJECT_LIST_DIR}/qobjectlistmodel.h)
+list(APPEND SRC ${QML_OBJECT_LIST_DIR}/qobjectlistmodel.cpp)
+
 wrap_cpp(MOC_SRC ${HDR})
 
 # This project will generate library
-add_library(qmlbinding MODULE ${SRC} ${MOC_SRC} ${HDR} ${QML})
+add_library(qmlbinding SHARED ${SRC} ${MOC_SRC} ${HDR} ${QML})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
     .
@@ -20,6 +24,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ../3rdparty/k8json-build/
     ../3rdparty/qoauth/include
+    ${QML_OBJECT_LIST_DIR}
     ${QCA2_INCLUDE_DIR}
 )
 
