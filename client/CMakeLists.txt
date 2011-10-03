@@ -33,11 +33,17 @@ add_custom_target(qml-desktop
 	DEPENDS ${QML}
 )
 
+if(APPLE)
+	set(QML_DESKTOP_CLIENT_DIR "${CMAKE_CURRENT_BINARY_DIR}/../Resources/qml/client")
+else()
+	set(QML_DESKTOP_CLIENT_DIR "${CMAKE_CURRENT_BINARY_DIR}/qml/client")
+endif()
+
 add_custom_command(
 	TARGET		qml-desktop
 	POST_BUILD
 	COMMAND		${CMAKE_COMMAND}
-	ARGS		-E copy_directory "${QML_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/qml/client"
+	ARGS		-E copy_directory "${QML_DIR}" "${QML_DESKTOP_CLIENT_DIR}"
 )
 
 if(WIN32)
