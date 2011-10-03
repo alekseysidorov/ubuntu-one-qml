@@ -36,3 +36,11 @@ QString Note::content() const
 	return m_content;
 }
 
+void Note::update()
+{
+}
+
+void Note::remove()
+{
+}
+
