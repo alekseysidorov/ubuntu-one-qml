@@ -4,58 +4,24 @@ import QtDesktop 0.1
 Item {
     id: notesView
     property QtObject notes: null
+    width: 800
+    height: 600
 
-    width: 600
-    height: 400
-
-    Frame {
-        id: notesList
-        width: 250
-
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 5
-        anchors.top: parent.top
-        anchors.topMargin: 5
-        anchors.left: parent.left
-        anchors.leftMargin: 5
-
-        ListView {
+    SplitterRow {
+        anchors.fill: parent
+        NotesListView {
             id: view
-            anchors.fill: parent
 
-            clip: true
-            model: notes.model
-            delegate: ToolButton {
-                id: text
-                width: view.width
-                text: note.title
-                tooltip: note.content
-            }
+            width: 200
+            notes: notesView.notes
         }
-    }
 
-    Item {
-        id: noteProperties
+        Item {
+            id: noteProperties
 
-        anchors.left: notesList.right
-        anchors.leftMargin: 20
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        anchors.top: parent.top
-        anchors.topMargin: 20
-        anchors.right: parent.right
-        anchors.rightMargin: 0
-
-        Row {
-            id: notesRow
-            anchors.fill: parent
-
-            Button {
-                id: sync
-                text: qsTr("Sync")
-                onClicked: {
-                    notes.sync();
-                }
+            Row {
+                id: notesRow
+                anchors.fill: parent
             }
         }
     }

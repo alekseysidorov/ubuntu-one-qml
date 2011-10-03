@@ -14,10 +14,6 @@ public:
 	Note *find(const QByteArray &guid);
 	void append(const NoteList &notes);
 	void append(Note *note);
-signals:
-	
-public slots:
-	
 };
 
 #endif // NOTESMODEL_H

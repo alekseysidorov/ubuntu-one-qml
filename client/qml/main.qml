@@ -5,101 +5,123 @@ import QtWebKit 1.0
 
 Rectangle {
     width: 800
-	height: 600
+    height: 600
 
-	Frame {
-		id: tokenRequestWindow
+    Frame {
+        id: tokenRequestWindow
 
-		anchors.fill: parent
-		anchors.margins: 5
-		visible: false
+        anchors.fill: parent
+        anchors.margins: 5
+        visible: false
 
-		LoginDialog {
-			id: loginDialog
-			anchors.centerIn: parent
-			api: api
-		}
-	}
+        LoginDialog {
+            id: loginDialog
+            anchors.centerIn: parent
+            api: api
+        }
+    }
 
-	Frame {
-		id: test
+    Item {
+        id: test
 
-		anchors.fill: parent
-		anchors.margins: 5
-		visible: false
+        anchors.fill: parent
+        visible: false
 
-		Item {
-			anchors.fill: parent
-			anchors.margins: 5
+        Item {
+            anchors.fill: parent
 
-            Button {
-                id: purgeBtn
-                text: qsTr("Purge")
-                onClicked: api.purge();
+            ToolBar {
+                id: toolBar
+
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                Row {
+
+                    ToolButton {
+                        id: sync
+                        tooltip: qsTr("Sync")
+                        iconName: "folder-sync"
+
+                        onClicked: api.notes.sync();
+                    }
+
+                    ToolButton {
+                        id: purgeBtn
+                        tooltip: qsTr("Purge")
+                        iconName: "edit-clear"
+
+                        onClicked: api.purge();
+                    }
+
+                }
             }
 
             NotesView {
                 id: notesView
                 notes: api.notes
 
-                anchors.top: purgeBtn.bottom
-                anchors.topMargin: 10
+                anchors.top: toolBar.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
             }
 
-//			Row {
-//				id: row
+            //			Row {
+            //				id: row
 
-//				Button {
-//					id: testButton
-//					text: qsTr("Test account")
-//					onClicked: {
-//						progressView.running = true;
-//						progressView.title = qsTr("Loading account info...")
-//						api.account.updateInfo();
-//					}
-//				}
+            //				Button {
+            //					id: testButton
+            //					text: qsTr("Test account")
+            //					onClicked: {
+            //						progressView.running = true;
+            //						progressView.title = qsTr("Loading account info...")
+            //						api.account.updateInfo();
+            //					}
+            //				}
 
-//				Button {
-//					id: testButton2
-//					text: qsTr("Test notes")
-//					onClicked: {
-//						progressView.running = true;
-//						progressView.title = qsTr("Loading notes...")
-//						api.notes.sync();
-//					}
-//				}
+            //				Button {
+            //					id: testButton2
+            //					text: qsTr("Test notes")
+            //					onClicked: {
+            //						progressView.running = true;
+            //						progressView.title = qsTr("Loading notes...")
+            //						api.notes.sync();
+            //					}
+            //				}
 
-//			}
+            //			}
 
-//			AccountView {
-//				id: view
-//				account: api.account
-//				anchors.bottom: parent.bottom
-//				anchors.top: row.bottom
-//				anchors.left: parent.left
-//				anchors.right: parent.right
-//				anchors.topMargin: 10
-//			}
+            //			AccountView {
+            //				id: view
+            //				account: api.account
+            //				anchors.bottom: parent.bottom
+            //				anchors.top: row.bottom
+            //				anchors.left: parent.left
+            //				anchors.right: parent.right
+            //				anchors.topMargin: 10
+            //			}
 
-		}
-	}
+        }
+    }
 
-	ProgressView {
-		id: progressView
-		anchors.fill: parent
+    ProgressView {
+        id: progressView
+        anchors.fill: parent
 
-		Connections {
-			target: api.account
-			onInfoUpdated: {
-				progressView.running = false;
-				progressView.title = "";
-			}
-		}
-	}
+        Connections {
+            target: api.account
+            onInfoUpdated: {
+                progressView.running = false;
+                progressView.title = "";
+            }
+        }
+    }
 
-	Api {
-		id: api
-		machine: "Robinhood"
+    Api {
+        id: api
+        machine: "Robinhood"
 
         function checkToken()
         {
@@ -114,20 +136,20 @@ Rectangle {
         onHasTokenChanged: checkToken()
     }
 
-	Connections {
-		target: loginDialog
+    Connections {
+        target: loginDialog
 
-		onStarted: {
-			progressView.title = qsTr("Authorization...")
-			progressView.running = true;
-		}
+        onStarted: {
+            progressView.title = qsTr("Authorization...")
+            progressView.running = true;
+        }
 
-		onFinished: {
-			progressView.running = false;
-			loginDialog.visible = !success
-			test.visible = success;
-		}
-	}
+        onFinished: {
+            progressView.running = false;
+            tokenRequestWindow.visible = !success
+            test.visible = success;
+        }
+    }
 
 }
 
