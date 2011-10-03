@@ -1,6 +1,7 @@
 #include "notes.h"
 #include "note.h"
 #include "notesmodel.h"
+#include "notesstorage.h"
 #include "auth.h"
 #include <QNetworkReply>
 #include <json.h>
@@ -18,6 +19,8 @@ NotesModel *Notes::model()
 {
 	if (!m_model) {
 		m_model = new NotesModel(this);
+		NotesStorage storage(this);
+		m_model.data()->append(storage.load());
 		emit modelChanged();
 	}
 	return m_model.data();
@@ -65,23 +68,15 @@ void Notes::onNotesReceived()
 		QVariantMap map = Json::parse(data).toMap();
 		int latestSyncRevision = map.value("latest-sync-revision").toInt();
 		QVariantList notes = map.value("notes").toList();
-		QObjectList list;
+		NoteList list;
 		foreach (QVariant value, notes) {
-			QVariantMap data = value.toMap();
-
-			QByteArray guid = data.value("guid").toByteArray();
-			QString title = data.value("title").toString();
-			QString content = data.value("note-content").toString();
-
-			Note *note = new Note(guid, this);
-			note->setTitle(title);
-			note->setContent(content);
-			list.append(note);
-
-			qDebug() << guid << title;
+			Note *note = fillNote(value.toMap());
+			if (note)
+				list.append(note);
 		}
 		model()->append(list);
 	}
+	emit syncFinished();
 }
 
 void Notes::webLogin()
@@ -96,4 +91,23 @@ void Notes::onWebAuthFinished(bool success)
 {
 	if (success)
 		sync();
+}
+
+Note *Notes::fillNote(const QVariantMap &map)
+{
+	QByteArray guid = map.value("guid").toByteArray();
+	if (guid.isEmpty())
+		return 0;
+
+	QString title = map.value("title").toString();
+	QString content = map.value("note-content").toString();
+
+	Note *note = model()->find(guid);
+	if (!note)
+	   note = new Note(guid, this);
+	note->setTitle(title);
+	note->setContent(content);
+
+	qDebug() << guid << title;
+	return note;
 }

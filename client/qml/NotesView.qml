@@ -28,8 +28,8 @@ Item {
             delegate: ToolButton {
                 id: text
                 width: view.width
-                text: object.title
-                tooltip: object.content
+                text: note.title
+                tooltip: note.content
             }
         }
     }

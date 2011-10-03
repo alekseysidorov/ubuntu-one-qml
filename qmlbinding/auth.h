@@ -32,6 +32,7 @@ public:
 	QString email() const;
 	QString pasword() const;
 	bool hasToken() const;
+
 	Notes *notes();
 	Account *account();
 

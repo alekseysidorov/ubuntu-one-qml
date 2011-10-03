@@ -36,3 +36,19 @@ QString Note::content() const
 	return m_content;
 }
 
+QString Note::guid() const
+{
+	return m_guid;
+}
+
+int Note::revision() const
+{
+	return m_revision;
+}
+
+void Note::setRevision(int revision)
+{
+	m_revision = revision;
+	emit revisionChanged();
+}
+

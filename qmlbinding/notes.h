@@ -3,7 +3,9 @@
 
 #include <QObject>
 #include <QWeakPointer>
+#include <QVariantMap>
 
+class Note;
 class NotesModel;
 class UbuntuOneApi;
 class Notes : public QObject
@@ -15,6 +17,9 @@ public:
 	NotesModel *model();
 signals:
 	void modelChanged();
+	void syncFinished();
+protected:
+	Note *fillNote(const QVariantMap &map);
 public slots:
 	void sync();
 private slots:
