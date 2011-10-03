@@ -79,8 +79,8 @@ Column {
 			loginDialog.finished(false);
 		}
 
-		onAuthorized: {
-			loginDialog.finished(true);
+        onHasTokenChanged: {
+            loginDialog.finished(api.hasToken);
 		}
 	}
 

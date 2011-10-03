@@ -18,12 +18,8 @@ UbuntuOneApi::UbuntuOneApi(QObject *parent) :
 	m_manager(new QNetworkAccessManager(this)),
 	m_oauth(new QOAuth::Interface(this))
 {
-	connect(m_manager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
-			SLOT(onAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
-
 	QSettings settings;
 	//TODO use encrypted storage instead
-
 	settings.beginGroup("login");
 	m_email = settings.value("email").toByteArray();
 	m_password = settings.value("password").toByteArray();
@@ -36,6 +32,9 @@ UbuntuOneApi::UbuntuOneApi(QObject *parent) :
 	m_token = settings.value("token").toByteArray();
 	m_tokenSecret = settings.value("tokenSecret").toByteArray();
 	settings.endGroup();
+
+	connect(m_manager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
+			SLOT(onAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
 }
 
 void UbuntuOneApi::requestToken(const QString &email, const QString &password)
@@ -55,6 +54,26 @@ void UbuntuOneApi::requestToken(const QString &email, const QString &password)
 	reply->setProperty("password", password);
 
 	connect(reply, SIGNAL(finished()), SLOT(onAuthReplyFinished()));
+}
+
+void UbuntuOneApi::purge()
+{
+	QSettings settings;
+
+	settings.beginGroup("login");
+	settings.remove("email");
+	settings.remove("password");
+	settings.endGroup();
+
+	settings.beginGroup("token");
+	settings.remove("consumerKey");
+	settings.remove("consumerSecret");
+	settings.remove("token");
+	settings.remove("tokenSecret");
+	settings.endGroup();
+
+	m_token.clear();
+	emit hasTokenChanged();
 }
 
 QString UbuntuOneApi::machineName() const
@@ -78,7 +97,7 @@ void UbuntuOneApi::onAuthReplyFinished()
 {
 	QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 	QVariantMap response = Json::parse(reply->readAll()).toMap();
-	qDebug() << response;
+
 	m_token = response.value("token").toByteArray();
 	m_tokenSecret = response.value("token_secret").toByteArray();
 	m_oauth->setConsumerKey(response.value("consumer_key").toByteArray());
@@ -93,10 +112,9 @@ void UbuntuOneApi::onConfirmReplyFinished()
 	QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 	QByteArray data = reply->readAll();
 	if (data.contains("ok")) {
-		emit authorized();
+		emit hasTokenChanged();
 
 		QSettings settings;
-
 		settings.beginGroup("login");
 		settings.setValue("email", m_email);
 		settings.setValue("password", m_password);
@@ -125,13 +143,12 @@ QNetworkReply *UbuntuOneApi::get(const QUrl &url)
 
 QNetworkReply *UbuntuOneApi::put(const QUrl &url, const QByteArray &data)
 {
-	//QByteArray header = m_oauth->createParametersString(url.toEncoded(), QOAuth::GET, m_token, m_tokenSecret,
-	//									QOAuth::HMAC_SHA1, QOAuth::ParamMap(),
-	//									QOAuth::ParseForHeaderArguments);
-	//QNetworkRequest request(url);
-	//request.setRawHeader("Authorization", header);
+	QByteArray header = m_oauth->createParametersString(url.toEncoded(), QOAuth::GET, m_token, m_tokenSecret,
+														QOAuth::HMAC_SHA1, QOAuth::ParamMap(),
+														QOAuth::ParseForHeaderArguments);
 
 	QNetworkRequest request(url);
+	request.setRawHeader("Authorization", header);
 	return m_manager->put(request, data);
 }
 

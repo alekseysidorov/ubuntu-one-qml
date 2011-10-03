@@ -32,9 +32,18 @@ Rectangle {
 			anchors.fill: parent
 			anchors.margins: 5
 
+            Button {
+                id: purgeBtn
+                text: qsTr("Purge")
+                onClicked: api.purge();
+            }
+
             NotesView {
                 id: notesView
                 notes: api.notes
+
+                anchors.top: purgeBtn.bottom
+                anchors.topMargin: 10
             }
 
 //			Row {
@@ -92,14 +101,18 @@ Rectangle {
 		id: api
 		machine: "Robinhood"
 
-		Component.onCompleted: {
-			if (api.hasToken)
-				test.visible = true;
-			else {
-				tokenRequestWindow.visible = true;
-			}
-		}
-	}
+        function checkToken()
+        {
+            if (api.hasToken)
+                test.visible = true;
+            else {
+                tokenRequestWindow.visible = true;
+            }
+        }
+
+        Component.onCompleted: checkToken()
+        onHasTokenChanged: checkToken()
+    }
 
 	Connections {
 		target: loginDialog

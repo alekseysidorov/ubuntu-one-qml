@@ -21,11 +21,12 @@ class UbuntuOneApi : public QObject
     Q_OBJECT
     
 	Q_PROPERTY(QString machine READ machineName WRITE setMachineName NOTIFY machineNameChanged)
-	Q_PROPERTY(bool hasToken READ hasToken)
+	Q_PROPERTY(bool hasToken READ hasToken NOTIFY hasTokenChanged)
 	Q_PROPERTY(Notes *notes READ notes)
 	Q_PROPERTY(Account *account READ account)
 public:
 	explicit UbuntuOneApi(QObject *parent = 0);
+
 	void setMachineName(const QString &machine);
 	QString machineName() const;
 	QString email() const;
@@ -39,11 +40,12 @@ public:
 	QNetworkAccessManager *manager() const;
 public slots:
 	void requestToken(const QString &userName, const QString &password);
+	void purge();
 signals:
-	void authorized();
 	void authorizationFailed(const QString &error);
 	void machineNameChanged();
 	void emailChanged();
+	void hasTokenChanged();
 private slots:
 	void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *auth);
 	void onAuthReplyFinished();
