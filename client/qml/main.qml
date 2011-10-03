@@ -31,7 +31,7 @@ Rectangle {
             anchors.fill: parent
 
             ToolBar {
-                id: toolBar
+				id: toolBar
 
                 anchors.top: parent.top
                 anchors.left: parent.left

@@ -52,3 +52,11 @@ void Note::setRevision(int revision)
 	emit revisionChanged();
 }
 
+void Note::save()
+{
+}
+
+void Note::remove()
+{
+}
+
