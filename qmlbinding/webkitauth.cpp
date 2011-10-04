@@ -12,6 +12,7 @@ WebkitAuth::WebkitAuth(const QUrl &url, QNetworkAccessManager *manager, QWidget 
 	QWebPage *p = page();
 	p->setNetworkAccessManager(manager);
 	p->mainFrame()->load(url);
+	setWindowTitle(tr("Web authorization"));
 
 	connect(p, SIGNAL(loadFinished(bool)), SLOT(onLoadFinished(bool)));
 }
@@ -19,6 +20,7 @@ WebkitAuth::WebkitAuth(const QUrl &url, QNetworkAccessManager *manager, QWidget 
 void WebkitAuth::onLoadFinished(bool)
 {
 	qDebug() << url().path();
+	setWindowTitle(title());
 	if (url().path() == QLatin1String("/dashboard/")) {
 		emit finished(true);
 		close();
