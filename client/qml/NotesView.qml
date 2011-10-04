@@ -9,6 +9,8 @@ Item {
 
     SplitterRow {
         anchors.fill: parent
+        handleWidth: 1
+
         NotesListView {
             id: view
 
