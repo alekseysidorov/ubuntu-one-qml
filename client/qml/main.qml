@@ -31,7 +31,7 @@ Rectangle {
             anchors.fill: parent
 
             ToolBar {
-				id: toolBar
+                id: toolBar
 
                 anchors.top: parent.top
                 anchors.left: parent.left
@@ -67,42 +67,6 @@ Rectangle {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
             }
-
-            //			Row {
-            //				id: row
-
-            //				Button {
-            //					id: testButton
-            //					text: qsTr("Test account")
-            //					onClicked: {
-            //						progressView.running = true;
-            //						progressView.title = qsTr("Loading account info...")
-            //						api.account.updateInfo();
-            //					}
-            //				}
-
-            //				Button {
-            //					id: testButton2
-            //					text: qsTr("Test notes")
-            //					onClicked: {
-            //						progressView.running = true;
-            //						progressView.title = qsTr("Loading notes...")
-            //						api.notes.sync();
-            //					}
-            //				}
-
-            //			}
-
-            //			AccountView {
-            //				id: view
-            //				account: api.account
-            //				anchors.bottom: parent.bottom
-            //				anchors.top: row.bottom
-            //				anchors.left: parent.left
-            //				anchors.right: parent.right
-            //				anchors.topMargin: 10
-            //			}
-
         }
     }
 

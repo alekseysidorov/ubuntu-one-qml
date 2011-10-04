@@ -3,14 +3,16 @@
 
 Note::Note(Notes *notes) :
 	QObject(notes),
-	m_notes(notes)
+	m_notes(notes),
+	m_status(NoteNew)
 {
 }
 
 Note::Note(const QByteArray &guid, Notes *notes) :
 	QObject(notes),
 	m_notes(notes),
-	m_guid(guid)
+	m_guid(guid),
+	m_status(NoteOutdated)
 {
 }
 
@@ -52,11 +54,26 @@ void Note::setRevision(int revision)
 	emit revisionChanged();
 }
 
+Note::Status Note::status() const
+{
+	return m_status;
+}
+
+void Note::setStatus(Note::Status status)
+{
+	m_status = status;
+	emit statusChanged();
+}
+
 void Note::save()
 {
 }
 
 void Note::remove()
+{
+}
+
+void Note::sync()
 {
 }
 

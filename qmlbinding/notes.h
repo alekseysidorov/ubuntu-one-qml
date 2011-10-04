@@ -22,6 +22,7 @@ protected:
 	Note *fillNote(const QVariantMap &map);
 public slots:
 	void sync();
+	Note *create();
 private slots:
 	void webLogin();
 	void apiRefsReceived();

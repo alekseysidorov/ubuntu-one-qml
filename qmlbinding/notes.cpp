@@ -41,6 +41,15 @@ void Notes::sync()
 	connect(m_api->get(url), SIGNAL(finished()), SLOT(onNotesReceived()));
 }
 
+Note *Notes::create()
+{
+	Note *note = new Note(this);
+	note->setTitle(tr("New note"));
+	note->setContent(tr("Type here"));
+	model()->append(note);
+	return note;
+}
+
 void Notes::apiRefsReceived()
 {
 	QByteArray data = static_cast<QNetworkReply*>(sender())->readAll();

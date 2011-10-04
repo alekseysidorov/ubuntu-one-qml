@@ -26,7 +26,6 @@ Component {
             sourceSize.height: 22
             sourceSize.width: 22
             source: "images/note.svgz"
-
         }
 
         Text {

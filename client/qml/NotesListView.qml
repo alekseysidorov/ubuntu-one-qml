@@ -69,9 +69,12 @@ Item {
 
             ToolButton {
                 id: syncBtn
-                iconName: "folder-sync"
+                iconName: "list-add"
+                tooltip: qsTr("Add a new note")
 
-                onClicked: notes.sync()
+                onClicked: {
+                    currentNote = notes.create();
+                }
             }
         }
     }
