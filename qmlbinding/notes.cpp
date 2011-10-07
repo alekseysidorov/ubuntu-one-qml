@@ -11,7 +11,8 @@
 
 Notes::Notes(UbuntuOneApi *auth) : QObject(auth),
 	m_api(auth),
-	m_latestSyncRevision(0)
+	m_latestSyncRevision(0),
+	m_currentRevision(0)
 {
 }
 
@@ -24,6 +25,24 @@ NotesModel *Notes::model()
 		emit modelChanged();
 	}
 	return m_model.data();
+}
+
+void Notes::updateNotes(const NoteList &notes)
+{
+	QVariantMap map;
+	map.insert("latest-sync-revision", m_latestSyncRevision);
+	QVariantList list;
+	foreach (Note *note, notes) {
+		note->setStatus(note->isMarkedForRemoral() ? Note::NoteRemoral : Note::NoteSyncing);
+		list.append(Note::serialize(note));
+	}
+	map.insert("note-changes", list);
+	QByteArray data = Json::generate(map);
+
+	qDebug() << data;
+
+	QUrl url(m_apiRef);
+	connect(m_api->put(url, data), SIGNAL(finished()), SLOT(onNotesUpdateFinished()));
 }
 
 void Notes::sync()
@@ -58,7 +77,7 @@ void Notes::apiRefsReceived()
 	m_lastName = map.value("last-name").toString();
 	m_firstName = map.value("first-name").toString();
 	m_currentSyncGuid = map.value("current-sync-guid").toByteArray();
-	//m_latestSyncRevision = map.value("latest-sync-revision").toInt();
+	m_currentRevision = map.value("latest-sync-revision").toInt();
 
 	QVariantMap notes = map.value("notes-ref").toMap();
 	m_notesRef = notes.value("href").toString();
@@ -75,7 +94,7 @@ void Notes::onNotesReceived()
 		webLogin();
 	else {
 		QVariantMap map = Json::parse(data).toMap();
-		int latestSyncRevision = map.value("latest-sync-revision").toInt();
+		m_currentRevision = m_latestSyncRevision = map.value("latest-sync-revision").toInt();
 		QVariantList notes = map.value("notes").toList();
 		NoteList list;
 		foreach (QVariant value, notes) {
@@ -102,21 +121,27 @@ void Notes::onWebAuthFinished(bool success)
 		sync();
 }
 
+void Notes::onNotesUpdateFinished()
+{
+	QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+	qDebug() << reply->readAll();
+}
+
 Note *Notes::fillNote(const QVariantMap &map)
 {
 	QByteArray guid = map.value("guid").toByteArray();
 	if (guid.isEmpty())
 		return 0;
+	int revision = map.value("last-sync-revision").toInt();
 
-	QString title = map.value("title").toString();
-	QString content = map.value("note-content").toString();
 
 	Note *note = model()->find(guid);
 	if (!note)
 	   note = new Note(guid, this);
-	note->setTitle(title);
-	note->setContent(content);
+	else if (note->revision() >= revision)
+		return note;
 
-	qDebug() << guid << title;
+	Note::fill(note, map);
+	qDebug() << guid << note->title();
 	return note;
 }

@@ -6,6 +6,7 @@
 #include <QVariantMap>
 
 class Note;
+typedef QList<Note*> NoteList;
 class NotesModel;
 class UbuntuOneApi;
 class Notes : public QObject
@@ -15,6 +16,7 @@ class Notes : public QObject
 public:
 	explicit Notes(UbuntuOneApi *auth);
 	NotesModel *model();
+	void updateNotes(const NoteList &notes);
 signals:
 	void modelChanged();
 	void syncFinished();
@@ -28,6 +30,7 @@ private slots:
 	void apiRefsReceived();
 	void onNotesReceived();
 	void onWebAuthFinished(bool success);
+	void onNotesUpdateFinished();
 private:
 	UbuntuOneApi *m_api;
 	QWeakPointer<NotesModel> m_model;
@@ -39,6 +42,7 @@ private:
 	QString m_apiRef;
 
 	int m_latestSyncRevision;
+	int m_currentRevision;
 	QByteArray m_currentSyncGuid;
 };
 

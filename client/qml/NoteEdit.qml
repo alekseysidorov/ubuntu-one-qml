@@ -8,10 +8,14 @@ Item {
     width: 600
     height: 400
 
+    onNoteChanged: {
+        titleEdit.text = note.title;
+        contentEdit.text = note.content;
+    }
+
     TextInput {
         id: titleEdit
         font.bold: true
-        text: note.title
         selectByMouse: true
 
         anchors.left: parent.left
@@ -20,6 +24,8 @@ Item {
         anchors.topMargin: 5
         anchors.right: parent.right
         anchors.rightMargin: 5
+
+        onTextChanged: note.title = text;
     }
 
     Flickable {
@@ -37,10 +43,28 @@ Item {
            id: contentEdit
 
            width: flickable.width
-           text: note.content
            wrapMode: TextEdit.WordWrap
            textFormat: TextEdit.RichText
            selectByMouse: true
+
+           onTextChanged: note.content = text;
        }
+    }
+
+    Row {
+        anchors.bottom: parent.bottom
+
+    Button {
+        id: syncBtn
+        text: qsTr("save")
+        onClicked: note.sync()
+    }
+
+    Button {
+        id: removeBtn
+        text: qsTr("remove")
+        onClicked: note.remove()
+    }
+
     }
 }

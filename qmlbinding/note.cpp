@@ -1,18 +1,23 @@
 #include "note.h"
 #include "notes.h"
+#include <QUuid>
 
 Note::Note(Notes *notes) :
 	QObject(notes),
 	m_notes(notes),
-	m_status(NoteNew)
+	m_status(NoteNew),
+	m_isMarkedForRemoral(false)
 {
+	QUuid uid = QUuid::createUuid();
+	m_guid = uid.toString().toLatin1();
 }
 
 Note::Note(const QByteArray &guid, Notes *notes) :
 	QObject(notes),
 	m_notes(notes),
 	m_guid(guid),
-	m_status(NoteOutdated)
+	m_status(NoteOutdated),
+	m_isMarkedForRemoral(false)
 {
 }
 
@@ -65,15 +70,51 @@ void Note::setStatus(Note::Status status)
 	emit statusChanged();
 }
 
+QVariantMap Note::serialize(Note *note)
+{
+	QVariantMap map;
+	map.insert("guid", note->guid());
+	map.insert("title", note->title());
+	map.insert("note-content", note->content());
+	map.insert("last-sync-revision", note->revision());
+	if (note->isMarkedForRemoral())
+		map.insert("command", "delete");
+	return map;
+}
+
+void Note::fill(Note *note, const QVariantMap &data)
+{
+	//note->setGuid(data.value("guid").toByteArray());
+	note->setTitle(data.value("title").toString());
+	note->setContent(data.value("note-content").toString());
+	note->setRevision(data.value("last-sync-revision").toInt());
+}
+
+bool Note::isMarkedForRemoral() const
+{
+	return m_isMarkedForRemoral;
+}
+
+void Note::markForRemoral(bool set)
+{
+	m_isMarkedForRemoral = set;
+}
+
 void Note::save()
 {
+	sync();
 }
 
 void Note::remove()
 {
+	markForRemoral(true);
+	sync();
 }
 
 void Note::sync()
 {
+	NoteList list;
+	list.append(this);
+	m_notes->updateNotes(list);
 }
 

@@ -2,6 +2,7 @@
 #define NOTE_H
 
 #include <QObject>
+#include <QVariant>
 
 class Notes;
 class Note : public QObject
@@ -11,6 +12,7 @@ class Note : public QObject
 	Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
 	Q_PROPERTY(QString content READ content WRITE setContent NOTIFY textChanged)
 	Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
+	Q_PROPERTY(Status status READ status NOTIFY statusChanged)
 	Q_ENUMS(Status)
 public:
 	enum Status
@@ -18,7 +20,8 @@ public:
 		NoteNew,
 		NoteActual,
 		NoteOutdated,
-		NoteSyncing
+		NoteSyncing,
+		NoteRemoral
 	};
 	explicit Note(Notes *notes);
 	explicit Note(const QByteArray &guid, Notes *notes);
@@ -31,6 +34,10 @@ public:
 	void setRevision(int revision);
 	Status status() const;
 	void setStatus(Status status);
+	static QVariantMap serialize(Note *note);
+	static void fill(Note *note, const QVariantMap &data);
+	bool isMarkedForRemoral() const;
+	void markForRemoral(bool set);
 signals:
 	void titleChanged();
 	void textChanged();
@@ -48,6 +55,7 @@ private:
 	QString m_content;
 	int m_revision;
 	Status m_status;
+	bool m_isMarkedForRemoral;
 };
 typedef QList<Note*> NoteList;
 
