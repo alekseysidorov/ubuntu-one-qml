@@ -42,7 +42,6 @@ private:
 	QString m_apiRef;
 
 	int m_latestSyncRevision;
-	int m_currentRevision;
 	QByteArray m_currentSyncGuid;
 };
 

@@ -27,6 +27,20 @@ void NotesModel::append(const NoteList &notes)
 
 void NotesModel::append(Note *note)
 {
-	if (!contains(note))
+	if (!contains(note)) {
 		QObjectListModel::append(note);
+		connect(note, SIGNAL(destroyed(QObject*)), SLOT(onNoteRemoved(QObject*)));
+	}
+}
+
+void NotesModel::remove(Note *note)
+{
+	int index = indexOf(note);
+	if (index != -1)
+		removeAt(index);
+}
+
+void NotesModel::onNoteRemoved(QObject *object)
+{
+	remove(static_cast<Note*>(object));
 }

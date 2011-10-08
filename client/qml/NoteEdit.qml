@@ -44,7 +44,7 @@ Item {
 
            width: flickable.width
            wrapMode: TextEdit.WordWrap
-           textFormat: TextEdit.RichText
+           textFormat: TextEdit.PlainText
            selectByMouse: true
 
            onTextChanged: note.content = text;

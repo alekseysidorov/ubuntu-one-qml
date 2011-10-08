@@ -14,6 +14,9 @@ public:
 	Note *find(const QByteArray &guid);
 	void append(const NoteList &notes);
 	void append(Note *note);
+	void remove(Note *note);
+private slots:
+	void onNoteRemoved(QObject *object);
 };
 
 #endif // NOTESMODEL_H

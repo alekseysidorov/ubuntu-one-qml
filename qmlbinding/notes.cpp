@@ -8,11 +8,12 @@
 #include "webkitauth.h"
 
 #include <QDebug>
+#include <QSettings>
+#include <QNetworkCookie>
 
 Notes::Notes(UbuntuOneApi *auth) : QObject(auth),
 	m_api(auth),
-	m_latestSyncRevision(0),
-	m_currentRevision(0)
+	m_latestSyncRevision(0)
 {
 }
 
@@ -30,10 +31,10 @@ NotesModel *Notes::model()
 void Notes::updateNotes(const NoteList &notes)
 {
 	QVariantMap map;
-	map.insert("latest-sync-revision", m_latestSyncRevision);
+	map.insert("latest-sync-revision", m_latestSyncRevision + 1);
 	QVariantList list;
 	foreach (Note *note, notes) {
-		note->setStatus(note->isMarkedForRemoral() ? Note::NoteRemoral : Note::NoteSyncing);
+		note->setStatus(note->isMarkedForRemoral() ? Note::StatusRemoral : Note::StatusSyncing);
 		list.append(Note::serialize(note));
 	}
 	map.insert("note-changes", list);
@@ -41,8 +42,9 @@ void Notes::updateNotes(const NoteList &notes)
 
 	qDebug() << data;
 
-	QUrl url(m_apiRef);
-	connect(m_api->put(url, data), SIGNAL(finished()), SLOT(onNotesUpdateFinished()));
+	QNetworkReply *reply = m_api->put(QUrl(m_apiRef), data);
+	reply->setProperty("notes", qVariantFromValue(notes));
+	connect(reply, SIGNAL(finished()), SLOT(onNotesUpdateFinished()));
 }
 
 void Notes::sync()
@@ -77,24 +79,40 @@ void Notes::apiRefsReceived()
 	m_lastName = map.value("last-name").toString();
 	m_firstName = map.value("first-name").toString();
 	m_currentSyncGuid = map.value("current-sync-guid").toByteArray();
-	m_currentRevision = map.value("latest-sync-revision").toInt();
+	int currentRevision = map.value("latest-sync-revision").toInt();
 
 	QVariantMap notes = map.value("notes-ref").toMap();
 	m_notesRef = notes.value("href").toString();
 	m_apiRef = notes.value("api-ref").toString();
 	qDebug() << data;
 
-	sync();
+	//init cookie
+	QSettings settings;
+	int size = settings.beginReadArray("cookies");
+	QList<QNetworkCookie> cookies;
+	for (int i = 0; i != size; i++) {
+		settings.setArrayIndex(i);
+		QByteArray data = settings.value("cookie").toByteArray();
+		cookies.append(QNetworkCookie::parseCookies(data));
+	}
+	settings.endArray();
+	m_api->manager()->cookieJar()->setCookiesFromUrl(cookies, m_apiRef);
+
+	if (currentRevision == m_latestSyncRevision)
+		emit syncFinished();
+	else
+		sync();
 }
 
 void Notes::onNotesReceived()
 {
 	QByteArray data = static_cast<QNetworkReply*>(sender())->readAll();
+	qDebug() << data;
 	if (data.isEmpty())
 		webLogin();
 	else {
 		QVariantMap map = Json::parse(data).toMap();
-		m_currentRevision = m_latestSyncRevision = map.value("latest-sync-revision").toInt();
+		m_latestSyncRevision = map.value("latest-sync-revision").toInt();
 		QVariantList notes = map.value("notes").toList();
 		NoteList list;
 		foreach (QVariant value, notes) {
@@ -117,14 +135,38 @@ void Notes::webLogin()
 
 void Notes::onWebAuthFinished(bool success)
 {
-	if (success)
+	if (success) {
+		QNetworkCookieJar *jar = m_api->manager()->cookieJar();
+		QList<QNetworkCookie> cookies = jar->cookiesForUrl(m_apiRef);
+		QSettings settings;
+		settings.beginWriteArray("cookies", cookies.count());
+		for (int i = 0; i != cookies.count(); i++) {
+			settings.setArrayIndex(i);
+			settings.setValue("cookie", cookies.at(i).toRawForm());
+		}
+		settings.endArray();
 		sync();
+	}
 }
 
 void Notes::onNotesUpdateFinished()
 {
 	QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
-	qDebug() << reply->readAll();
+	QByteArray data = reply->readAll();
+	qDebug() << data;
+	QVariantMap map = Json::parse(data).toMap();
+	int revision = map.value("latest-sync-revision").toInt();
+	if (!revision) {
+		//TODO
+	}
+	m_latestSyncRevision = revision;
+	foreach (auto note, reply->property("notes").value<NoteList>()) {
+		note->setStatus(Note::StatusActual);
+		if (note->isMarkedForRemoral())
+			note->deleteLater();
+	}
+
+	emit syncFinished();
 }
 
 Note *Notes::fillNote(const QVariantMap &map)

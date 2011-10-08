@@ -11,7 +11,7 @@
 #include <json.h>
 #include <QtOAuth>
 #include <QSettings>
-#include <QNetworkCookie>
+#include <QNetworkDiskCache>
 
 UbuntuOneApi::UbuntuOneApi(QObject *parent) :
 	QObject(parent),
@@ -32,6 +32,11 @@ UbuntuOneApi::UbuntuOneApi(QObject *parent) :
 	m_token = settings.value("token").toByteArray();
 	m_tokenSecret = settings.value("tokenSecret").toByteArray();
 	settings.endGroup();
+
+	//init cache
+	QNetworkDiskCache *diskCache = new QNetworkDiskCache(this);
+	diskCache->setCacheDirectory("cacheDir");
+	m_manager->setCache(diskCache);
 
 	connect(m_manager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
 			SLOT(onAuthenticationRequired(QNetworkReply*,QAuthenticator*)));

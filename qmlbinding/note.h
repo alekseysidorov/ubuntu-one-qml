@@ -17,11 +17,11 @@ class Note : public QObject
 public:
 	enum Status
 	{
-		NoteNew,
-		NoteActual,
-		NoteOutdated,
-		NoteSyncing,
-		NoteRemoral
+		StatusNew,
+		StatusActual,
+		StatusOutdated,
+		StatusSyncing,
+		StatusRemoral
 	};
 	explicit Note(Notes *notes);
 	explicit Note(const QByteArray &guid, Notes *notes);
@@ -58,5 +58,7 @@ private:
 	bool m_isMarkedForRemoral;
 };
 typedef QList<Note*> NoteList;
+
+Q_DECLARE_METATYPE(NoteList)
 
 #endif // NOTE_H

@@ -5,7 +5,7 @@
 Note::Note(Notes *notes) :
 	QObject(notes),
 	m_notes(notes),
-	m_status(NoteNew),
+	m_status(StatusNew),
 	m_isMarkedForRemoral(false)
 {
 	QUuid uid = QUuid::createUuid();
@@ -16,7 +16,7 @@ Note::Note(const QByteArray &guid, Notes *notes) :
 	QObject(notes),
 	m_notes(notes),
 	m_guid(guid),
-	m_status(NoteOutdated),
+	m_status(StatusOutdated),
 	m_isMarkedForRemoral(false)
 {
 }
