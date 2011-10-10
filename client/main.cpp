@@ -9,9 +9,9 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-	app.setApplicationName("UbuntuOneQuick");
+	app.setApplicationName("wanderer");
 	app.setApplicationVersion("0.1");
-	app.setOrganizationName("Stranger");
+	app.setOrganizationName("sauron");
 	app.setOrganizationDomain("http://co-de.org");
 
 	QmlApplicationViewer viewer;

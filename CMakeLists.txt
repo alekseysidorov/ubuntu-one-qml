@@ -12,6 +12,7 @@ set(QT_USE_QTDECLARATIVE true)
 set(QT_USE_QTNETWORK true)
 set(QT_USE_QTXML true)
 set(QT_USE_QTWEBKIT true)
+set(QT_USE_QTSQL true)
 
 find_package(Qt4 REQUIRED)
 

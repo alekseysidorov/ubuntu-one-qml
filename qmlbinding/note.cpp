@@ -43,7 +43,7 @@ QString Note::content() const
 	return m_content;
 }
 
-QString Note::guid() const
+QByteArray Note::guid() const
 {
 	return m_guid;
 }
@@ -70,13 +70,14 @@ void Note::setStatus(Note::Status status)
 	emit statusChanged();
 }
 
-QVariantMap Note::serialize(Note *note)
+QVariantMap Note::serialize(Note *note, bool saveGuid)
 {
 	QVariantMap map;
-	map.insert("guid", note->guid());
+	if (saveGuid)
+		map.insert("guid", note->guid());
 	map.insert("title", note->title());
 	map.insert("note-content", note->content());
-	map.insert("last-sync-revision", note->revision());
+	//map.insert("last-sync-revision", note->revision());
 	if (note->isMarkedForRemoral())
 		map.insert("command", "delete");
 	return map;

@@ -8,15 +8,18 @@ set(QML_OBJECT_LIST_DIR ../3rdparty/qml-object-model)
 # Search for source and headers in source directory
 file(GLOB_RECURSE SRC "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE HDR "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+file(GLOB_RECURSE RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.qrc")
 file(GLOB_RECURSE QML "${QMLDIR}/*.*")
+
 
 list(APPEND HDR ${QML_OBJECT_LIST_DIR}/qobjectlistmodel.h)
 list(APPEND SRC ${QML_OBJECT_LIST_DIR}/qobjectlistmodel.cpp)
 
 wrap_cpp(MOC_SRC ${HDR})
+qt4_add_resources(RCC ${RESOURCES})
 
 # This project will generate library
-add_library(qmlbinding SHARED ${SRC} ${MOC_SRC} ${HDR} ${QML})
+add_library(qmlbinding SHARED ${SRC} ${MOC_SRC} ${HDR} ${QML} ${RCC})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
     .

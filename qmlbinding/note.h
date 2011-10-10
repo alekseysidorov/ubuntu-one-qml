@@ -29,12 +29,12 @@ public:
 	QString title() const;
 	void setContent(const QString &content);
 	QString content() const;
-	QString guid() const;
+	QByteArray guid() const;
 	int revision() const;
 	void setRevision(int revision);
 	Status status() const;
 	void setStatus(Status status);
-	static QVariantMap serialize(Note *note);
+	static QVariantMap serialize(Note *note, bool saveGuid = true);
 	static void fill(Note *note, const QVariantMap &data);
 	bool isMarkedForRemoral() const;
 	void markForRemoral(bool set);

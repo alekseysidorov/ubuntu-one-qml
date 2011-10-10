@@ -13,8 +13,10 @@ public:
 	void save(Note *note);
 	void save(const NoteList &notes);
 	NoteList load(bool loadContent = false);
-	Note *load(const QByteArray &guid, bool loadContent = false);
+	Note *load(const QByteArray &guid, bool loadContent = true);
 	void load(Note *note);
+	void remove(const QByteArray &guid);
+	void remove(const QList<QByteArray> &notes);
 protected:
 	bool checkStorage() const;
 	void initStorage();

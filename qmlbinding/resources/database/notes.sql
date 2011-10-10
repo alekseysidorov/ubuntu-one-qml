@@ -1,0 +1,11 @@
+PRAGMA foreign_keys=OFF;
+CREATE TABLE "notes" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+	"guid" TEXT NOT NULL
+);
+CREATE TABLE "properties" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "noteid" INTEGER NOT NULL,
+    "key" TEXT NOT NULL,
+    "value" TEXT
+);
