@@ -9,10 +9,10 @@ Note::Note(Notes *notes) :
 	m_isMarkedForRemoral(false)
 {
 	QUuid uid = QUuid::createUuid();
-	m_guid = uid.toString().toLatin1();
+	m_guid = uid.toString();
 }
 
-Note::Note(const QByteArray &guid, Notes *notes) :
+Note::Note(const QString &guid, Notes *notes) :
 	QObject(notes),
 	m_notes(notes),
 	m_guid(guid),
@@ -43,7 +43,7 @@ QString Note::content() const
 	return m_content;
 }
 
-QByteArray Note::guid() const
+QString Note::guid() const
 {
 	return m_guid;
 }
@@ -85,7 +85,7 @@ QVariantMap Note::serialize(Note *note, bool saveGuid)
 
 void Note::fill(Note *note, const QVariantMap &data)
 {
-	//note->setGuid(data.value("guid").toByteArray());
+	//note->setGuid(data.value("guid"));
 	note->setTitle(data.value("title").toString());
 	note->setContent(data.value("note-content").toString());
 	note->setRevision(data.value("last-sync-revision").toInt());

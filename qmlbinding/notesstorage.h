@@ -12,7 +12,7 @@ public:
 	NotesStorage(Notes *notes);
 	void save(Note *note);
 	void save(const NoteList &notes);
-	NoteList load(bool loadContent = false);
+	NoteList load(bool loadContent = true);
 	Note *load(const QByteArray &guid, bool loadContent = true);
 	void load(Note *note);
 	void remove(const QByteArray &guid);

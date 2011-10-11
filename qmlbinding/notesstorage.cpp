@@ -8,7 +8,7 @@ namespace {
 bool isExist(Note *note)
 {
 	QSqlQuery query;
-	query.prepare("SELECT 1 FROM notes WHERE guid = ?");
+	query.prepare("SELECT id FROM notes WHERE guid = ?");
 	query.addBindValue(note->guid());
 	query.exec();
 	return query.next();
@@ -22,7 +22,7 @@ int lastInsertId(const QString &table)
 	return query.value(0).toInt();
 }
 
-int getNoteId(const QByteArray &guid)
+int getNoteId(const QString &guid)
 {
 	QSqlQuery query;
 	query.prepare("SELECT id FROM notes WHERE guid = ?");
@@ -72,14 +72,14 @@ QVariantMap getNoteProperties(int noteid, bool includeContent = true)
 	QVariantMap map;
 	if (includeContent) {
 		QSqlQuery propQuery;
-		propQuery.prepare("SELECT key, value FROM properties WHERE notesid = ?");
+		propQuery.prepare("SELECT key, value FROM properties WHERE noteid = ?");
 		propQuery.addBindValue(noteid);
 		propQuery.exec();
 		while (propQuery.next())
 			map.insert(propQuery.value(0).toString(), propQuery.value(1).toString());
 	} else {
 		QSqlQuery titleQuery;
-		titleQuery.prepare("SELECT value FROM properties WHERE notesid = ? and key = ?");
+		titleQuery.prepare("SELECT value FROM properties WHERE noteid = ? and key = ?");
 		titleQuery.addBindValue(noteid);
 		titleQuery.addBindValue("title");
 		titleQuery.exec();
@@ -100,7 +100,7 @@ QVariantList getNotes(bool includeContent = true)
 {
 	QVariantList list;
 	QSqlQuery query;
-	query.prepare("SELECT id, guid, revision FROM notes");
+	query.prepare("SELECT id, guid FROM notes");
 	query.exec();
 	while (query.next()) {
 		int id = query.value(0).toInt();
@@ -154,7 +154,7 @@ NoteList NotesStorage::load(bool loadContent)
 	NoteList list;
 	foreach (QVariant data, getNotes(loadContent)) {
 		QVariantMap map = data.toMap();
-		Note *note = new Note(map.value("guid").toByteArray(), m_notes);
+		Note *note = new Note(map.value("guid").toString(), m_notes);
 		Note::fill(note, map);
 		list.append(note);
 	}

@@ -40,7 +40,7 @@ void Notes::updateNotes(const NoteList &notes)
 	map.insert("note-changes", list);
 	QByteArray data = Json::generate(map);
 
-	qDebug() << map;
+	qDebug() << data;
 
 	QNetworkReply *reply = m_api->put(QUrl(m_apiRef), data);
 	reply->setProperty("notes", qVariantFromValue(notes));
@@ -172,7 +172,7 @@ void Notes::onNotesUpdateFinished()
 
 Note *Notes::fillNote(const QVariantMap &map)
 {
-	QByteArray guid = map.value("guid").toByteArray();
+	QString guid = map.value("guid").toString();
 	if (guid.isEmpty())
 		return 0;
 	int revision = map.value("last-sync-revision").toInt();

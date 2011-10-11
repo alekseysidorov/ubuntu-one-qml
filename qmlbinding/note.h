@@ -24,12 +24,12 @@ public:
 		StatusRemoral
 	};
 	explicit Note(Notes *notes);
-	explicit Note(const QByteArray &guid, Notes *notes);
+	explicit Note(const QString &guid, Notes *notes);
 	void setTitle(const QString &title);
 	QString title() const;
 	void setContent(const QString &content);
 	QString content() const;
-	QByteArray guid() const;
+	QString guid() const;
 	int revision() const;
 	void setRevision(int revision);
 	Status status() const;
@@ -50,7 +50,7 @@ public slots:
 	void sync();
 private:
 	Notes *m_notes;
-	QByteArray m_guid;
+	QString m_guid;
 	QString m_title;
 	QString m_content;
 	int m_revision;

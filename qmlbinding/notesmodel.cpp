@@ -9,7 +9,7 @@ NotesModel::NotesModel(QObject *parent) :
 	setRoleNames(roles);
 }
 
-Note *NotesModel::find(const QByteArray &guid)
+Note *NotesModel::find(const QString &guid)
 {
 	foreach (QObject *obj, objectList()) {
 		Note *note = static_cast<Note*>(obj);
