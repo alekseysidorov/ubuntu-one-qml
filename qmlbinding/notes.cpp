@@ -161,10 +161,13 @@ void Notes::onNotesUpdateFinished()
 		//TODO
 	}
 	m_latestSyncRevision = revision;
+	NotesStorage storage(this);
 	foreach (auto note, reply->property("notes").value<NoteList>()) {
 		note->setStatus(Note::StatusActual);
-		if (note->isMarkedForRemoral())
+		if (note->isMarkedForRemoral()) {
 			note->deleteLater();
+			storage.remove(note->guid());
+		}
 	}
 
 	emit syncFinished();

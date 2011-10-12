@@ -10,8 +10,9 @@ bool isExist(Note *note)
 	QSqlQuery query;
 	query.prepare("SELECT id FROM notes WHERE guid = ?");
 	query.addBindValue(note->guid());
-	query.exec();
-	return query.next();
+	if (query.exec())
+		return query.size() > 0;
+	return false;
 }
 
 int lastInsertId(const QString &table)
@@ -111,6 +112,24 @@ QVariantList getNotes(bool includeContent = true)
 	return list;
 }
 
+void removeNote(const QString &guid)
+{
+	QSqlQuery query;
+	int noteid = getNoteId(guid);
+	query.prepare("DELETE FROM notes WHERE id = ?");
+	query.addBindValue(noteid);
+	if (!query.exec()) {
+		//TODO
+		return;
+	}
+	query.prepare("DELETE FROM properties WHERE noteid = ?");
+	query.addBindValue(noteid);
+	if (!query.exec()) {
+		//TODO
+		return;
+	}
+}
+
 } //namespace
 
 NotesStorage::NotesStorage(Notes *notes) :
@@ -161,14 +180,15 @@ NoteList NotesStorage::load(bool loadContent)
 	return list;
 }
 
-void NotesStorage::remove(const QByteArray &guid)
+void NotesStorage::remove(const QString &guid)
 {
-	//TODO
+	removeNote(guid);
 }
 
-void NotesStorage::remove(const QList<QByteArray> &notes)
+void NotesStorage::remove(const QList<QString> &notes)
 {
-	//TODO
+	for (auto note : notes)
+		remove(note);
 }
 
 Note *NotesStorage::load(const QByteArray &guid, bool loadContent)

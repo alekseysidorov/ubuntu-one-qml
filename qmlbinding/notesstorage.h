@@ -15,8 +15,8 @@ public:
 	NoteList load(bool loadContent = true);
 	Note *load(const QByteArray &guid, bool loadContent = true);
 	void load(Note *note);
-	void remove(const QByteArray &guid);
-	void remove(const QList<QByteArray> &notes);
+	void remove(const QString &guid);
+	void remove(const QList<QString> &notes);
 protected:
 	bool checkStorage() const;
 	void initStorage();
