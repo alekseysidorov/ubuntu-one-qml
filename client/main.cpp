@@ -5,6 +5,7 @@
 
 #include <QtDeclarative>
 #include <QDebug>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
@@ -22,6 +23,8 @@ int main(int argc, char *argv[])
 		QString error;
 		viewer.engine()->importPlugin(dir.absoluteFilePath(plugin), QLatin1String("UbuntuOne"), &error);
 	}
+	if (QIcon::themeName().isEmpty())
+		QIcon::setThemeName("oxygen");
 
 	viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 	viewer.setMainQmlFile(QLatin1String("qml/client/main.qml"));
