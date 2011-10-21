@@ -10,16 +10,20 @@ bool isExist(Note *note)
 	QSqlQuery query;
 	query.prepare("SELECT id FROM notes WHERE guid = ?");
 	query.addBindValue(note->guid());
-	query.exec();
-	return query.next();
+	if (!query.exec()) {
+		qWarning() << query.lastError();
+	bool ok = query.next();
+	qDebug() << query.size();
+	return ok;
 }
 
 int lastInsertId(const QString &table)
 {
 	QSqlQuery query(QString("SELECT max(id) FROM %1").arg(table));
-	query.exec();
-	query.next();
-	return query.value(0).toInt();
+	if (!query.exec()) {
+		qWarning() << query.lastError();
+	}
+	return query.next() ? query.value(0).toInt() : -1;
 }
 
 int getNoteId(const QString &guid)
@@ -27,9 +31,10 @@ int getNoteId(const QString &guid)
 	QSqlQuery query;
 	query.prepare("SELECT id FROM notes WHERE guid = ?");
 	query.addBindValue(guid);
-	query.exec();
-	query.next();
-	return query.value(0).toInt();
+	if (!query.exec()) {
+		qWarning() << query.lastError();
+	}
+	return query.next() ? query.value(0).toInt() : -1;
 }
 
 void saveNote(Note *note)
@@ -38,10 +43,11 @@ void saveNote(Note *note)
 	query.prepare("INSERT INTO notes(guid) VALUES (?)");
 	query.addBindValue(note->guid());
 	if (!query.exec()) {
+		qWarning() << query.lastError();
 		//TODO
 	}
-	int id = lastInsertId("notes");
 
+	int id = lastInsertId("notes");
 	QVariantMap properties = Note::serialize(note, false);
 	for (auto it = properties.constBegin(); it != properties.constEnd(); it++) {
 		query.prepare("INSERT INTO properties(noteid, key, value) VALUES(?, ?, ?)");
@@ -63,7 +69,8 @@ void updateNote(Note *note)
 		query.addBindValue(it.value());
 		query.addBindValue(id);
 		query.addBindValue(it.key());
-		query.exec();
+		if(!query.exec())
+			qDebug() << query.lastError();
 	}
 }
 
@@ -83,8 +90,8 @@ QVariantMap getNoteProperties(int noteid, bool includeContent = true)
 		titleQuery.addBindValue(noteid);
 		titleQuery.addBindValue("title");
 		titleQuery.exec();
-		titleQuery.next();
-		map.insert("title", titleQuery.value(0));
+		if (titleQuery.next())
+			map.insert("title", titleQuery.value(0));
 	}
 	return map;
 }
