@@ -10,10 +10,9 @@ bool isExist(Note *note)
 	QSqlQuery query;
 	query.prepare("SELECT id FROM notes WHERE guid = ?");
 	query.addBindValue(note->guid());
-	if (!query.exec()) {
+	if (!query.exec())
 		qWarning() << query.lastError();
 	bool ok = query.next();
-	qDebug() << query.size();
 	return ok;
 }
 
@@ -65,7 +64,8 @@ void updateNote(Note *note)
 	QVariantMap properties = Note::serialize(note, false);
 	for (auto it = properties.constBegin(); it != properties.constEnd(); it++) {
 		QSqlQuery query;
-		query.prepare("UPDATE properies SET value = ? WHERE noteid = ? AND key = ?");
+
+		query.prepare("UPDATE properties SET value = ? WHERE noteid = ? AND key = ?");
 		query.addBindValue(it.value());
 		query.addBindValue(id);
 		query.addBindValue(it.key());
@@ -171,7 +171,7 @@ void NotesStorage::save(Note *note)
 void NotesStorage::save(const NoteList &notes)
 {
 	foreach (auto note, notes)
-		saveNote(note);
+		save(note);
 }
 
 NoteList NotesStorage::load(bool loadContent)

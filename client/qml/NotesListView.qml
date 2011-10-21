@@ -30,6 +30,7 @@ Item {
         clip: true
         model: notes.model
         highlightFollowsCurrentItem: true
+        keyNavigationWraps: true
 
         anchors.left: parent.left
         anchors.right: parent.right
@@ -37,6 +38,10 @@ Item {
         anchors.bottom: footer.top
 
         delegate: notesDelegate
+
+        //highlight: Rectangle {
+        //    color: "blue"
+        //}
 
         MouseArea {
             anchors.fill: parent

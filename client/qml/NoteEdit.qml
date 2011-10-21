@@ -7,10 +7,22 @@ Item {
 
     width: 600
     height: 400
+    state: "welcome"
 
     onNoteChanged: {
-        titleEdit.text = note.title;
-        contentEdit.text = note.content;
+
+        onNoteChanged: {
+            console.log(note);
+            if (note) {
+                titleEdit.text = note.title;
+                contentEdit.text = note.content;
+            } else {
+                titleEdit.text = qsTr("Welcome to notes client");
+                contentEdit.text = qsTr("Click to add note");
+            }
+        }
+
+        //state = note ? "edit" : "welcome";
     }
 
     TextInput {
@@ -25,7 +37,10 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: 5
 
-        onTextChanged: note.title = text;
+        onTextChanged: {
+            if (note)
+                note.title = text;
+        }
     }
 
     Flickable {
@@ -39,32 +54,62 @@ Item {
         anchors.top: titleEdit.bottom
         anchors.topMargin: 10
 
-       TextEdit {
-           id: contentEdit
+        TextEdit {
+            id: contentEdit
 
-           width: flickable.width
-           wrapMode: TextEdit.WordWrap
-           textFormat: TextEdit.PlainText
-           selectByMouse: true
+            width: flickable.width
+            wrapMode: TextEdit.WordWrap
+            textFormat: TextEdit.PlainText
+            selectByMouse: true
 
-           onTextChanged: note.content = text;
-       }
+            onTextChanged: {
+                if (note)
+                    note.content = text;
+            }
+        }
     }
 
     Row {
         anchors.bottom: parent.bottom
 
-    Button {
-        id: syncBtn
-        text: qsTr("save")
-        onClicked: note.sync()
+        Button {
+            id: syncBtn
+            text: qsTr("save")
+            onClicked: note.sync()
+        }
+
+        Button {
+            id: removeBtn
+            text: qsTr("remove")
+            onClicked: note.remove()
+        }
     }
 
-    Button {
-        id: removeBtn
-        text: qsTr("remove")
-        onClicked: note.remove()
-    }
+    //states: [
+    //    State {
+    //        name: "welcome"
+    //        PropertyChanges {
+    //            target: titleEdit
+    //            readOnly: true
+    //            text: qsTr("Welcome to notes client")
+    //        }
+    //        PropertyChanges {
+    //            target: contentEdit
+    //            readOnly: true
+    //            text: qsTr("Click to add note")
+    //        }
+    //    },
+    //    State {
+    //        name: "edit"
+    //        StateChangeScript {
+    //            name: "editScript"
+    //            script: {
+    //                console.log("Script + " + note.title);
+    //                titleEdit.text = note.title;
+    //                contentEdit.text = note.content;
+    //            }
+    //        }
 
-    }
+    //    }
+    //]
 }
