@@ -3,7 +3,8 @@ project(client)
 message(STATUS "Searching client sources and headers")
 # Search for source and headers in source directory
 
-set(QML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qml")
+set(CLIENT_TYPE desktop)
+set(QML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qml/${CLIENT_TYPE}")
 
 file(GLOB_RECURSE SRC "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE HDR "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
@@ -28,7 +29,7 @@ target_link_libraries(client
 	${QT_LIBRARIES}
 	)
 
-add_custom_target(qml-desktop
+add_custom_target(qml-${CLIENT_TYPE}
 	ALL
 	DEPENDS ${QML}
 )
@@ -40,7 +41,7 @@ else()
 endif()
 
 add_custom_command(
-	TARGET		qml-desktop
+	TARGET		qml-${CLIENT_TYPE}
 	POST_BUILD
 	COMMAND		${CMAKE_COMMAND}
 	ARGS		-E copy_directory "${QML_DIR}" "${QML_DESKTOP_CLIENT_DIR}"
