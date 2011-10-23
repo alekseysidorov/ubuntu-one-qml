@@ -92,11 +92,11 @@ macro(ADD_SIMPLE_LIBRARY target)
 
 	update_compiler_flags_library(${target})
 
-	TARGET_LINK_LIBRARIES (${target}
+	target_link_libraries(${target}
 		${QT_LIBRARIES}
-		)
+	)
 
-	INSTALL(TARGETS ${target}
+	install(TARGETS ${target}
 		RUNTIME DESTINATION ${BIN_DIR_DEF}
 		LIBRARY DESTINATION lib${LIB_SUFFIX}
 		ARCHIVE DESTINATION lib${LIB_SUFFIX}
@@ -105,6 +105,21 @@ endmacro()
 
 #Вытаскиваем у таргета location и дописываем в список
 macro(APPEND_TARGET_LOCATION target list)
-		get_target_property(${target}_LOCATION ${target} LOCATION)
-		list(APPEND ${list} ${${target}_LOCATION})
+	get_target_property(${target}_LOCATION ${target} LOCATION)
+	list(APPEND ${list} ${${target}_LOCATION})
+endmacro()
+
+macro(CHECK_DIRECTORY_EXIST directory exists)
+    if(EXISTS ${directory})
+        set(_exists FOUND)
+    else()
+        set(_exists NOT_FOUND)
+    endif()
+    set(exists ${_exists})
+endmacro()
+
+macro(CHECK_QML_MODULE name exists)
+    check_directory_exist("${QT_IMPORTS_DIR}/${name}" _exists)
+    message(STATUS "Checking qml module ${name} - ${_exists}")
+    set(${exists} ${_exists})
 endmacro()

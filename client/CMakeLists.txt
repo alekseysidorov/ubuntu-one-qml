@@ -3,7 +3,15 @@ project(client)
 message(STATUS "Searching client sources and headers")
 # Search for source and headers in source directory
 
-set(CLIENT_TYPE desktop)
+check_qml_module(desktopHarmattan HARMATTAN)
+message(STATUS ${HARMATTAN})
+
+if(${HARMATTAN} STREQUAL "FOUND")
+    set(CLIENT_TYPE meego)
+else()
+    set(CLIENT_TYPE desktop)
+endif()
+
 set(QML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qml/${CLIENT_TYPE}")
 
 file(GLOB_RECURSE SRC "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
