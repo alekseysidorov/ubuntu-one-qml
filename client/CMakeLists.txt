@@ -4,7 +4,6 @@ message(STATUS "Searching client sources and headers")
 # Search for source and headers in source directory
 
 check_qml_module(desktopHarmattan HARMATTAN)
-message(STATUS ${HARMATTAN})
 
 if(${HARMATTAN} STREQUAL "FOUND")
     set(CLIENT_TYPE meego)
