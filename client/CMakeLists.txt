@@ -16,12 +16,10 @@ set(QML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qml/${CLIENT_TYPE}")
 file(GLOB_RECURSE SRC "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE HDR "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 file(GLOB_RECURSE FORMS "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
-
-wrap_cpp(MOC_SRC ${HDR})
 qt4_wrap_ui(UIS_H ${FORMS})
 
 # This project will generate library
-add_executable(client ${SRC} ${MOC_SRC} ${HDR} ${UIS_H} ${QML_DIR})
+add_executable(client ${SRC} ${HDR} ${UIS_H} ${QML_DIR})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
 	.

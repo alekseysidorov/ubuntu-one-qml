@@ -13,6 +13,7 @@ set(QT_USE_QTNETWORK true)
 set(QT_USE_QTXML true)
 set(QT_USE_QTWEBKIT true)
 set(QT_USE_QTSQL true)
+set(CMAKE_AUTOMOC true)
 
 find_package(Qt4 REQUIRED)
 

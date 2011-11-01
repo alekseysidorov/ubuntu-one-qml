@@ -14,12 +14,10 @@ file(GLOB_RECURSE QML "${QMLDIR}/*.*")
 
 list(APPEND HDR ${QML_OBJECT_LIST_DIR}/qobjectlistmodel.h)
 list(APPEND SRC ${QML_OBJECT_LIST_DIR}/qobjectlistmodel.cpp)
-
-wrap_cpp(MOC_SRC ${HDR})
 qt4_add_resources(RCC ${RESOURCES})
 
 # This project will generate library
-add_library(qmlbinding SHARED ${SRC} ${MOC_SRC} ${HDR} ${QML} ${RCC})
+add_library(qmlbinding SHARED ${SRC} ${HDR} ${QML} ${RCC})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
     .
