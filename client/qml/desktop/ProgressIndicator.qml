@@ -1,21 +1,19 @@
 import QtQuick 1.0
+import UbuntuOne 0.1
 
-Image {
-	id: image
-	property bool playing : true
+ProgressIndicatorBase {
+    id: indicator
+    property bool playing : true
+    width: 128
+    height: 128
 
-    source: "images/busy.png"
-	width: sourceSize.width
-	height: sourceSize.height
-
-
-	RotationAnimation on rotation {
-		loops: Animation.Infinite
-		from: 0
-		to: 360
-		running: playing
-		duration: 5000
-	}
+    RotationAnimation on angle {
+        loops: Animation.Infinite
+        from: 0
+        to: 360
+        running: playing
+        duration: 1000
+    }
 
 }
 
