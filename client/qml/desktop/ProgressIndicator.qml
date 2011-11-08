@@ -9,8 +9,8 @@ ProgressIndicatorBase {
 
     RotationAnimation on angle {
         loops: Animation.Infinite
-        from: 0
-        to: 360
+        from: 360
+        to: 0
         running: playing
         duration: 1000
     }

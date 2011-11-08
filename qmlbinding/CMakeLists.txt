@@ -45,7 +45,8 @@ add_custom_command(
 )
 
 set(QT_DECLARATIVE_IMPORT imports)
-set(IMPORT_DESTINATION ${QT_IMPORTS_DIR}/ubuntuOne)
+#set(IMPORT_DESTINATION ${QT_IMPORTS_DIR}/ubuntuOne)
+set(IMPORT_DESTINATION ubuntuOne)
 
 install(TARGETS qmlbinding
 	RUNTIME DESTINATION ${IMPORT_DESTINATION}

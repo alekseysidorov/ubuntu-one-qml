@@ -16,6 +16,7 @@ set(QT_USE_QTSQL true)
 set(CMAKE_AUTOMOC true)
 
 find_package(Qt4 REQUIRED)
+include(${QT_USE_FILE})
 
 if(WIN32)
 	set(BIN_DIR_DEF bin)
@@ -27,7 +28,6 @@ else()
 	set(SHARE_DIR_DEF share/apps)
 endif()
 
-include(UseQt4)
 include(MyMacro)
 
 set(QT_MIN_VERSION "4.7.4")

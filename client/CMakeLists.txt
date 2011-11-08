@@ -28,8 +28,12 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-update_compiler_flags(client)
 
+if(WIN32)
+    set(QT_USE_QTMAIN TRUE)
+endif(WIN32)
+
+update_compiler_flags(client)
 target_link_libraries(client
 	${QT_LIBRARIES}
 	)
@@ -72,3 +76,29 @@ install(TARGETS client
 	ARCHIVE DESTINATION lib${LIB_SUFFIX}
 )
 
+#--------------------------------------------------------------------------------
+# Now the installation stuff below
+#--------------------------------------------------------------------------------
+SET(plugin_dest_dir bin)
+SET(qtconf_dest_dir bin)
+SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/client")
+IF(APPLE)
+  SET(plugin_dest_dir QtTest.app/Contents/MacOS)
+  SET(qtconf_dest_dir QtTest.app/Contents/Resources)
+  SET(APPS "\${CMAKE_INSTALL_PREFIX}/client.app")
+ENDIF(APPLE)
+IF(WIN32)
+  SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/client.exe")
+ENDIF(WIN32)
+
+INSTALL(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION ${plugin_dest_dir}/plugins COMPONENT Runtime)
+
+# fixup the bundle
+SET(DIRS ${QT_LIBRARY_DIRS})
+
+INSTALL(CODE "
+    file(GLOB_RECURSE QTPLUGINS
+      \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+    include(BundleUtilities)
+    fixup_bundle(\"${APPS}\" \"\${QTPLUGINS}\" \"${DIRS}\")
+    " COMPONENT Runtime)

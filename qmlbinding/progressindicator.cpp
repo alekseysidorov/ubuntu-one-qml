@@ -53,7 +53,7 @@ void ProgressIndicatorBase::paint(QPainter *p, const QStyleOptionGraphicsItem *i
 
 	for (int i = 0; i < m_leafCount; i++) {
 		QColor color = m_color;
-		color.setAlphaF(qMax(m_minimumOpacity, 1.0f - qreal((int(i * m_delta) + m_angle) % 360) / 360));
+		color.setAlphaF(qMax(m_minimumOpacity, qreal((int(i * m_delta) + m_angle) % 360) / 360));
 		p->setPen(Qt::NoPen);
 		p->setBrush(color);
 		p->save();
