@@ -18,14 +18,22 @@ file(GLOB_RECURSE HDR "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 file(GLOB_RECURSE FORMS "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
 qt4_wrap_ui(UIS_H ${FORMS})
 
+if(APPLE)
+    # set how it shows up in the Info.plist file
+    SET(MACOSX_BUNDLE_INFO_STRING "Foo")
+    SET(MACOSX_BUNDLE_LONG_VERSION_STRING "0.1")
+    SET(MACOSX_BUNDLE_BUNDLE_NAME "ubuntuOne")
+    SET(MACOSX_BUNDLE_BUNDLE_VERSION "0.1")
+endif()
+
 # This project will generate library
-add_executable(client ${SRC} ${HDR} ${UIS_H} ${QML_DIR})
+add_executable(client WIN32 MACOSX_BUNDLE ${SRC} ${HDR} ${UIS_H} ${QML_DIR})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
-	.
-	..
-	../3rdparty
-	${CMAKE_CURRENT_SOURCE_DIR}
+    .
+    ..
+    ../3rdparty
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 
@@ -34,9 +42,7 @@ if(WIN32)
 endif(WIN32)
 
 update_compiler_flags(client)
-target_link_libraries(client
-	${QT_LIBRARIES}
-	)
+target_link_libraries(client ${QT_LIBRARIES})
 
 add_custom_target(qml-${CLIENT_TYPE}
 	ALL
@@ -44,7 +50,7 @@ add_custom_target(qml-${CLIENT_TYPE}
 )
 
 if(APPLE)
-	set(QML_DESKTOP_CLIENT_DIR "${CMAKE_CURRENT_BINARY_DIR}/../Resources/qml/client")
+        set(QML_DESKTOP_CLIENT_DIR "${CMAKE_CURRENT_BINARY_DIR}/${BUNDLE_NAME}/Contents/Resources/qml/client")
 else()
 	set(QML_DESKTOP_CLIENT_DIR "${CMAKE_CURRENT_BINARY_DIR}/qml/client")
 endif()
@@ -71,10 +77,12 @@ if(WIN32)
 endif()
 
 install(TARGETS client
-	RUNTIME DESTINATION ${BIN_DIR_DEF}
-	LIBRARY DESTINATION lib${LIB_SUFFIX}
-	ARCHIVE DESTINATION lib${LIB_SUFFIX}
+    RUNTIME DESTINATION ${BINDIST}
+    LIBRARY DESTINATION ${LIBDIST}
+    ARCHIVE DESTINATION ${LIBDIST}
+    BUNDLE DESTINATION .
 )
+install(DIRECTORY ${QML_DESKTOP_CLIENT_DIR} DESTINATION ${SHAREDIR}/qml)
 
 #--------------------------------------------------------------------------------
 # Now the installation stuff below
@@ -83,22 +91,24 @@ SET(plugin_dest_dir bin)
 SET(qtconf_dest_dir bin)
 SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/client")
 IF(APPLE)
-  SET(plugin_dest_dir QtTest.app/Contents/MacOS)
-  SET(qtconf_dest_dir QtTest.app/Contents/Resources)
+  SET(plugin_dest_dir client.app/Contents/MacOS)
+  SET(qtconf_dest_dir client.app/Contents/Resources)
   SET(APPS "\${CMAKE_INSTALL_PREFIX}/client.app")
 ENDIF(APPLE)
 IF(WIN32)
   SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/client.exe")
 ENDIF(WIN32)
 
-INSTALL(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION ${plugin_dest_dir}/plugins COMPONENT Runtime)
+INSTALL(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION ${PLUGINSDIR} COMPONENT Runtime)
+INSTALL(DIRECTORY "${QT_PLUGINS_DIR}/crypto" DESTINATION ${PLUGINSDIR} COMPONENT Runtime)
+#INSTALL(DIRECTORY "${QT_IMPORTS_DIR}/Qt" DESTINATION ${BINDIR} COMPONENT Runtime)
 
 # fixup the bundle
 SET(DIRS ${QT_LIBRARY_DIRS})
 
 INSTALL(CODE "
     file(GLOB_RECURSE QTPLUGINS
-      \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+      \"\${CMAKE_INSTALL_PREFIX}/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
     include(BundleUtilities)
     fixup_bundle(\"${APPS}\" \"\${QTPLUGINS}\" \"${DIRS}\")
     " COMPONENT Runtime)

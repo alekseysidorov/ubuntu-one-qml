@@ -32,27 +32,29 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 update_compiler_flags(qmlbinding)
 
 target_link_libraries(qmlbinding
-	k8json
-	qoauth
-	${QT_LIBRARIES}
-	)
+    k8json
+    qoauth
+    ${QT_LIBRARIES}
+    )
 
 add_custom_command(
-	TARGET		qmlbinding
-	POST_BUILD
-	COMMAND		${CMAKE_COMMAND}
-	ARGS		-E copy_if_different "${QMLDIR}" "${CMAKE_CURRENT_BINARY_DIR}"
+    TARGET		qmlbinding
+    POST_BUILD
+    COMMAND		${CMAKE_COMMAND}
+    ARGS		-E copy_if_different "${QMLDIR}" "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
 set(QT_DECLARATIVE_IMPORT imports)
-#set(IMPORT_DESTINATION ${QT_IMPORTS_DIR}/ubuntuOne)
-set(IMPORT_DESTINATION ubuntuOne)
+set(IMPORT_DESTINATION ${QT_IMPORTS_DIR}/UbuntuOne)
+if(APPLE)
+    set(IMPORT_DESTINATION ${BINDIR}/UbuntuOne)
+endif()
 
 install(TARGETS qmlbinding
-	RUNTIME DESTINATION ${IMPORT_DESTINATION}
-	LIBRARY DESTINATION ${IMPORT_DESTINATION}
+    RUNTIME DESTINATION ${IMPORT_DESTINATION}
+    LIBRARY DESTINATION ${IMPORT_DESTINATION}
 )
 
 install(FILES ${QMLDIR}
-	DESTINATION ${IMPORT_DESTINATION}
+    DESTINATION ${IMPORT_DESTINATION}
 )

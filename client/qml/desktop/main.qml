@@ -1,12 +1,11 @@
 import QtQuick 1.0
 import UbuntuOne 0.1
 import QtDesktop 0.1
-import QtWebKit 1.0
 
 ProgressIndicator
 {
-    width: 32
-    height: 32
+    width: 64
+    height: 64
     playing: true
     leafCount: 15
 }

@@ -17,8 +17,11 @@ int main(int argc, char *argv[])
 
 	QmlApplicationViewer viewer;
 
+	qDebug() << viewer.engine()->importPathList();
+
 	//HACK
-	QDir dir("../qmlbinding");
+	QDir dir("./qmlbinding");
+	//dir = QDir(app.applicationDirPath() + "/UbuntuOne");
 	foreach (QString plugin, dir.entryList()) {
 		QString error;
 		viewer.engine()->importPlugin(dir.absoluteFilePath(plugin), QLatin1String("UbuntuOne"), &error);
