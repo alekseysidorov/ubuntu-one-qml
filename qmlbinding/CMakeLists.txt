@@ -45,10 +45,10 @@ add_custom_command(
 )
 
 set(QT_DECLARATIVE_IMPORT imports)
-set(IMPORT_DESTINATION ${QT_IMPORTS_DIR}/UbuntuOne)
-if(APPLE)
+#set(IMPORT_DESTINATION ${QT_IMPORTS_DIR}/UbuntuOne)
+#if(APPLE)
     set(IMPORT_DESTINATION ${BINDIR}/UbuntuOne)
-endif()
+#endif()
 
 install(TARGETS qmlbinding
     RUNTIME DESTINATION ${IMPORT_DESTINATION}

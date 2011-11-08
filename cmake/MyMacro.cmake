@@ -53,11 +53,11 @@ macro(UPDATE_COMPILER_FLAGS target)
 		list(APPEND COMPILER_FLAGS "-Wall -Wextra -Wnon-virtual-dtor")
 	endif()
 
-	update_cxx_compiler_flag("-std=c++0x" CXX_0X)
+        update_cxx_compiler_flag("-std=c++0x" CXX_0X)
 	if(NOT APPLE)
 		update_cxx_compiler_flag("-stdlib=libc++" LIBCXX)
 	endif()
-	update_cxx_compiler_flag("-fvisibility=hidden" HIDDEN_VISIBILITY)
+        update_cxx_compiler_flag("-fvisibility=hidden" HIDDEN_VISIBILITY)
 
 	get_target_property(${target}_TYPE ${target} TYPE)
 	if (${target}_TYPE STREQUAL "STATIC_LIBRARY")
