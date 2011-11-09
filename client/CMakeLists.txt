@@ -93,24 +93,25 @@ if(CREATE_BUNDLE)
 
     list(APPEND QML_MODULES
         Qt
+        QtDesktop
     )
 
     list(APPEND QT_PLUGINS
-        bearer/qgenericbearer4
-        bearer/qnativewifibearer4
-        codecs/qcncodecs4
-        codecs/qjpcodecs4
-        codecs/qjpcodecs4
-        codecs/qkrcodecs4
-        codecs/qtwcodecs4
-        imageformats/qsvg4
-        imageformats/qgif4
-        imageformats/qjpeg4
-        imageformats/qico4
-        imageformats/qmng4
-        imageformats/qtga4
-        imageformats/qtiff4
-        iconengines/qsvgicon4
+        bearer/qgenericbearer
+        bearer/qnativewifibearer
+        codecs/qcncodecs
+        codecs/qjpcodecs
+        codecs/qjpcodecs
+        codecs/qkrcodecs
+        codecs/qtwcodecs
+        imageformats/qsvg
+        imageformats/qgif
+        imageformats/qjpeg
+        imageformats/qico
+        imageformats/qmng
+        imageformats/qtga
+        imageformats/qtiff
+        iconengines/qsvgicon
         crypto/qca-ossl
     )
 
