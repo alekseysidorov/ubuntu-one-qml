@@ -17,6 +17,8 @@
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeContext>
 
+#include <QDebug>
+
 //#include <qplatformdefs.h> // MEEGO_EDITION_HARMATTAN
 
 #if defined(QMLJSDEBUGGER) && QT_VERSION < 0x040800
@@ -53,20 +55,27 @@ class QmlApplicationViewerPrivate
 
 QString QmlApplicationViewerPrivate::adjustPath(const QString &path)
 {
-#ifdef Q_OS_UNIX
 #ifdef Q_OS_MAC
     if (!QDir::isAbsolutePath(path))
         return QCoreApplication::applicationDirPath()
                 + QLatin1String("/../Resources/") + path;
 #else
-    const QString pathInInstallDir = QCoreApplication::applicationDirPath()
-        + QLatin1String("/../") + path;
-    if (pathInInstallDir.contains(QLatin1String("opt"))
-            && pathInInstallDir.contains(QLatin1String("bin"))
-            && QFileInfo(pathInInstallDir).exists()) {
-        return pathInInstallDir;
-    }
-#endif
+	QString pathInInstallDir = QCoreApplication::applicationDirPath()
+		+ QLatin1String("/../") + path;
+	if (pathInInstallDir.contains(QLatin1String("opt"))
+			&& pathInInstallDir.contains(QLatin1String("bin"))
+			&& QFileInfo(pathInInstallDir).exists()) {
+		return pathInInstallDir;
+	} else {
+		pathInInstallDir = QCoreApplication::applicationDirPath()
+						   + QLatin1String("/../share/") + path;
+		qDebug() << pathInInstallDir;
+		if (QFileInfo(pathInInstallDir).exists())
+			return pathInInstallDir;
+		//TODO
+		//pathInInstallDir = QCoreApplication::applicationDirPath()
+		//				   + QLatin1String("../share/apps") + path;
+	}
 #endif
 	return path;
 }
@@ -97,6 +106,7 @@ void QmlApplicationViewer::setMainQmlFile(const QString &file)
 {
     m_d->mainQmlFile = QmlApplicationViewerPrivate::adjustPath(file);
     setSource(QUrl::fromLocalFile(m_d->mainQmlFile));
+	qDebug() << m_d->mainQmlFile;
 }
 
 void QmlApplicationViewer::addImportPath(const QString &path)
