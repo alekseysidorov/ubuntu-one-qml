@@ -11,10 +11,8 @@ file(GLOB HDR "${SRC_DIR}/*.h")
 list(APPEND HDR json.h)
 list(APPEND SRC json.cpp)
 
-wrap_cpp(MOC_SRC ${HDR})
-
 # This project will generate library
-add_library(k8json SHARED ${SRC} ${MOC_SRC} ${HDR} ${UIS_H})
+add_library(k8json SHARED ${SRC} ${HDR} ${UIS_H})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}
@@ -30,7 +28,7 @@ target_link_libraries(k8json
 	)
 
 install(TARGETS k8json
-        RUNTIME DESTINATION ${BINDIR}
-        LIBRARY DESTINATION ${LIBDIR}
-        ARCHIVE DESTINATION ${LIBDIR}
+    RUNTIME DESTINATION ${RLIBDIR}
+    LIBRARY DESTINATION ${LIBDIR}
+    ARCHIVE DESTINATION ${LIBDIR}
 )

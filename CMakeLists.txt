@@ -17,28 +17,12 @@ set(CMAKE_AUTOMOC true)
 
 find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
-
-if(WIN32)
-    set(BINDIR .)
-    set(LIBDIR lib${LIB_SUFFIX})
-    set(SHAREDIR .)
-    set(PLUGINSDIR .)
-ELSEIF(APPLE)
-    set(BUNDLE_NAME client.app)
-    set(BINDIR ${BUNDLE_NAME}/Contents/MacOS)
-    set(LIBDIR ${BINDIR})
-    set(SHAREDIR ${BUNDLE_NAME}/Contents/Resources)
-    set(PLUGINSDIR ${BUNDLE_NAME}/Contents/PlugIns)
-else()
-    set(BINDIR bin)
-    set(LIBDIR lib${LIB_SUFFIX})
-    set(SHAREDIR share/apps)
-    set(PLUGINSDIR todo)
-endif()
-
-include(MyMacro)
+include(CommonUtils)
 
 set(QT_MIN_VERSION "4.7.4")
+define_bundle_paths(client)
+
+option(CREATE_BUNDLE "Create application bundle then install" ON)
 
 add_subdirectory(3rdparty)
 add_subdirectory(qmlbinding)

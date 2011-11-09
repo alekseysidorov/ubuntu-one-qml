@@ -7,3 +7,6 @@
 [submodule "3rdparty/qml-object-model"]
 	path = 3rdparty/qml-object-model
 	url = git://gitorious.org/qt-labs/qml-object-model.git
+[submodule "cmake"]
+	path = cmake
+	url = git://github.com/gorthauer/cmake-utils.git

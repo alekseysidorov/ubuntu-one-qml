@@ -9,6 +9,7 @@ if(${HARMATTAN} STREQUAL "FOUND")
     set(CLIENT_TYPE meego)
 else()
     set(CLIENT_TYPE desktop)
+    list(APPEND QML_MODULES QtDesktop)
 endif()
 
 set(QML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qml/${CLIENT_TYPE}")
@@ -79,32 +80,47 @@ install(TARGETS client
 )
 install(DIRECTORY ${QML_DESKTOP_CLIENT_DIR} DESTINATION ${SHAREDIR}/qml)
 
-#--------------------------------------------------------------------------------
-# Now the installation stuff below
-#--------------------------------------------------------------------------------
-SET(plugin_dest_dir bin)
-SET(qtconf_dest_dir bin)
-SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/client")
-IF(APPLE)
-  SET(plugin_dest_dir client.app/Contents/MacOS)
-  SET(qtconf_dest_dir client.app/Contents/Resources)
-  SET(APPS "\${CMAKE_INSTALL_PREFIX}/client.app")
-ENDIF(APPLE)
-IF(WIN32)
-  SET(APPS "\${CMAKE_INSTALL_PREFIX}/client.exe")
-ENDIF(WIN32)
+if(CREATE_BUNDLE)
+    set(APPS ${BUNDLE_PATH})
+    list(APPEND DIRS
+        ${QT_LIBRARY_DIR}
+        ${CMAKE_INSTALL_PREFIX}/${LIBDIR}
+    )
+    if(WIN32)
+        get_filename_component(_dir ${QT_QMAKE_EXECUTABLE} PATH)
+        list(APPEND DIRS ${_dir})
+    endif()
 
-#INSTALL(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION ${PLUGINSDIR} COMPONENT Runtime)
-INSTALL(DIRECTORY "${QT_PLUGINS_DIR}/crypto" DESTINATION ${PLUGINSDIR} COMPONENT Runtime)
-INSTALL(DIRECTORY "${QT_IMPORTS_DIR}/Qt" DESTINATION ${BINDIR} COMPONENT Runtime)
-INSTALL(DIRECTORY "${QT_IMPORTS_DIR}/QtDesktop" DESTINATION ${BINDIR} COMPONENT Runtime)
+    list(APPEND QML_MODULES
+        Qt
+    )
 
-# fixup the bundle
-SET(DIRS "H:/develop/QtSDK/Desktop/Qt/4.8.0/msvc2010/bin")
+    list(APPEND QT_PLUGINS
+        bearer/qgenericbearer
+        bearer/qnativewifibearer
+        codecs/qcncodecs
+        codecs/qjpcodecs
+        codecs/qjpcodecs
+        codecs/qkrcodecs
+        codecs/qtwcodecs
+        imageformats/qsvg
+        imageformats/qgif
+        imageformats/qjpeg
+        imageformats/qico
+        imageformats/qmng
+        imageformats/qtga
+        imageformats/qtiff
+        iconengines/qsvgicon
+        crypto/qca-ossl
+    )
 
-INSTALL(CODE "
-    file(GLOB_RECURSE QTPLUGINS
-      \"\${CMAKE_INSTALL_PREFIX}/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
-    include(BundleUtilities)
-    fixup_bundle(\"${APPS}\" \"\${QTPLUGINS}\" \"${DIRS}\")
-    " COMPONENT Runtime)
+    deploy_qml_modules(${QML_MODULES})
+    deploy_qt_plugins(${QT_PLUGINS})
+
+    INSTALL(CODE "
+        file(GLOB_RECURSE QTPLUGINS
+          \"\${CMAKE_INSTALL_PREFIX}/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+        include(BundleUtilities)
+        fixup_bundle(\"${APPS}\" \"\${QTPLUGINS}\" \"${DIRS}\")
+        " COMPONENT Runtime)
+endif()
