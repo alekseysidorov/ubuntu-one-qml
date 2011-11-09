@@ -36,17 +36,12 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-
-if(WIN32)
-    set(QT_USE_QTMAIN TRUE)
-endif(WIN32)
-
 update_compiler_flags(client)
-target_link_libraries(client ${QT_LIBRARIES})
+target_link_libraries(client ${QT_LIBRARIES} ${QT_QTMAIN_LIBRARY})
 
-add_custom_target(qml-${CLIENT_TYPE}
-	ALL
-	DEPENDS ${QML}
+    add_custom_target(qml-${CLIENT_TYPE}
+    ALL
+    DEPENDS ${QML}
 )
 
 if(APPLE)
@@ -56,24 +51,24 @@ else()
 endif()
 
 add_custom_command(
-	TARGET		qml-${CLIENT_TYPE}
-	POST_BUILD
-	COMMAND		${CMAKE_COMMAND}
-	ARGS		-E copy_directory "${QML_DIR}" "${QML_DESKTOP_CLIENT_DIR}"
+    TARGET		qml-${CLIENT_TYPE}
+    POST_BUILD
+    COMMAND		${CMAKE_COMMAND}
+    ARGS		-E copy_directory "${QML_DIR}" "${QML_DESKTOP_CLIENT_DIR}"
 )
 
 if(WIN32)
-        append_target_location(k8json CLIENT_DEPEND_LIBS)
-        append_target_location(qoauth CLIENT_DEPEND_LIBS)
+    append_target_location(k8json CLIENT_DEPEND_LIBS)
+    append_target_location(qoauth CLIENT_DEPEND_LIBS)
 
-        foreach(_lib ${CLIENT_DEPEND_LIBS})
-                add_custom_command(
-                        TARGET		client
-                        POST_BUILD
-                        COMMAND		${CMAKE_COMMAND}
-                        ARGS		-E copy "${_lib}" "${CMAKE_CURRENT_BINARY_DIR}"
-                )
-        endforeach()
+    foreach(_lib ${CLIENT_DEPEND_LIBS})
+            add_custom_command(
+                    TARGET		client
+                    POST_BUILD
+                    COMMAND		${CMAKE_COMMAND}
+                    ARGS		-E copy "${_lib}" "${CMAKE_CURRENT_BINARY_DIR}"
+            )
+    endforeach()
 endif()
 
 install(TARGETS client
@@ -105,7 +100,7 @@ INSTALL(DIRECTORY "${QT_IMPORTS_DIR}/Qt" DESTINATION ${BINDIR} COMPONENT Runtime
 INSTALL(DIRECTORY "${QT_IMPORTS_DIR}/QtDesktop" DESTINATION ${BINDIR} COMPONENT Runtime)
 
 # fixup the bundle
-SET(DIRS ${QT_LIBRARY_DIRS})
+SET(DIRS "H:/develop/QtSDK/Desktop/Qt/4.8.0/msvc2010/bin")
 
 INSTALL(CODE "
     file(GLOB_RECURSE QTPLUGINS

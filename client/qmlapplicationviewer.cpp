@@ -68,7 +68,7 @@ QString QmlApplicationViewerPrivate::adjustPath(const QString &path)
     }
 #endif
 #endif
-    return path;
+	return path;
 }
 
 QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :

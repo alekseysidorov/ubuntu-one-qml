@@ -193,7 +193,7 @@ void NotesStorage::remove(const QString &guid)
 
 void NotesStorage::remove(const QList<QString> &notes)
 {
-	for (auto note : notes)
+	foreach (auto note, notes)
 		remove(note);
 }
 
