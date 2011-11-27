@@ -21,31 +21,6 @@
 
 //#include <qplatformdefs.h> // MEEGO_EDITION_HARMATTAN
 
-#if defined(QMLJSDEBUGGER) && QT_VERSION < 0x040800
-
-#include <qt_private/qdeclarativedebughelper_p.h>
-
-#if !defined(NO_JSDEBUGGER)
-#include <jsdebuggeragent.h>
-#endif
-#if !defined(NO_QMLOBSERVER)
-#include <qdeclarativeviewobserver.h>
-#endif
-
-// Enable debugging before any QDeclarativeEngine is created
-struct QmlJsDebuggingEnabler
-{
-    QmlJsDebuggingEnabler()
-    {
-        QDeclarativeDebugHelper::enableDebugging();
-    }
-};
-
-// Execute code in constructor before first QDeclarativeEngine is instantiated
-static QmlJsDebuggingEnabler enableDebuggingHelper;
-
-#endif // QMLJSDEBUGGER
-
 class QmlApplicationViewerPrivate
 {
     QString mainQmlFile;
@@ -69,12 +44,15 @@ QString QmlApplicationViewerPrivate::adjustPath(const QString &path)
 	} else {
 		pathInInstallDir = QCoreApplication::applicationDirPath()
 						   + QLatin1String("/../share/") + path;
-		qDebug() << pathInInstallDir;
 		if (QFileInfo(pathInInstallDir).exists())
 			return pathInInstallDir;
-		//TODO
-		//pathInInstallDir = QCoreApplication::applicationDirPath()
-		//				   + QLatin1String("../share/apps") + path;
+		pathInInstallDir = QCoreApplication::applicationDirPath()
+						   + QLatin1String("/../share/apps/client/") + path;
+		if (QFileInfo(pathInInstallDir).exists())
+			return pathInInstallDir;
+		pathInInstallDir = QCoreApplication::applicationDirPath() + QLatin1String("/") + path;
+		if (QFileInfo(pathInInstallDir).exists())
+			return pathInInstallDir;
 	}
 #endif
 	return path;
@@ -86,15 +64,6 @@ QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
 {
     connect(engine(), SIGNAL(quit()), SLOT(close()));
     setResizeMode(QDeclarativeView::SizeRootObjectToView);
-    // Qt versions prior to 4.8.0 don't have QML/JS debugging services built in
-#if defined(QMLJSDEBUGGER) && QT_VERSION < 0x040800
-#if !defined(NO_JSDEBUGGER)
-    new QmlJSDebugger::JSDebuggerAgent(engine());
-#endif
-#if !defined(NO_QMLOBSERVER)
-    new QmlJSDebugger::QDeclarativeViewObserver(this, this);
-#endif
-#endif
 }
 
 QmlApplicationViewer::~QmlApplicationViewer()

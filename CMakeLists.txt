@@ -22,7 +22,7 @@ include(CommonUtils)
 set(QT_MIN_VERSION "4.7.4")
 define_bundle_paths(client)
 
-option(CREATE_BUNDLE "Create application bundle then install" ON)
+option(CREATE_BUNDLE "Create application bundle then install" OFF)
 
 add_subdirectory(3rdparty)
 add_subdirectory(qmlbinding)

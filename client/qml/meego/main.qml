@@ -5,6 +5,9 @@ import UbuntuOne 0.1
 PageStackWindow {
     id: rootWindow
     initialPage: Page {
+        NoteListPage {
+            id: notesListPage
+        }
         tools: ToolBarLayout {
             ButtonRow {
                 style: TabButtonStyle { }

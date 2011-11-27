@@ -21,7 +21,7 @@ Note *NotesModel::find(const QString &guid)
 
 void NotesModel::append(const NoteList &notes)
 {
-	foreach (auto *note, notes)
+	foreach (auto note, notes)
 		append(note);
 }
 
