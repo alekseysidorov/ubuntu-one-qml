@@ -3,9 +3,10 @@ import UbuntuOne 0.1
 
 ProgressIndicatorBase {
     id: indicator
-    property bool playing : true
+    property bool running : false
     width: 128
     height: 128
+    leafCount: 18
 
     RotationAnimation on angle {
         loops: Animation.Infinite

@@ -2,12 +2,11 @@ import QtQuick 1.0
 import UbuntuOne 0.1
 import QtDesktop 0.1
 
-ProgressIndicator
+BusyIndicator
 {
     width: 64
     height: 64
-    playing: true
-    leafCount: 15
+    running: true
 }
 
 //Rectangle {

@@ -31,12 +31,12 @@ ProgressIndicatorBase::ProgressIndicatorBase(QDeclarativeItem *parent) :
 	m_color(Qt::black),
 	m_leafCount(12),
 	m_delta(30),
-	m_minimumOpacity(0.3)
+	m_minimumOpacity(0.05)
 {
 	setFlag(QGraphicsItem::ItemHasNoContents, false);
 }
 
-void ProgressIndicatorBase::paint(QPainter *p, const QStyleOptionGraphicsItem *i, QWidget *w)
+void ProgressIndicatorBase::paint(QPainter *p, const QStyleOptionGraphicsItem *, QWidget *)
 {
 	p->save();
 
