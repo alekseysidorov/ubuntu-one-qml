@@ -2,12 +2,12 @@ import QtQuick 1.0
 import UbuntuOne 0.1
 import QtDesktop 0.1
 
-BusyIndicator
-{
+BusyIndicator {
     width: 64
     height: 64
     running: true
 }
+
 
 //Rectangle {
 //    width: 800
