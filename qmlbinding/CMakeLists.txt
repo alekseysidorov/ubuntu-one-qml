@@ -44,7 +44,7 @@ add_custom_command(
     ARGS		-E copy_if_different "${QMLDIR}" "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
-set(IMPORT_DESTINATION ${IMPORTSDIR}/UbuntuOne)
+set(IMPORT_DESTINATION ${IMPORTSDIR}/com.ubuntu.one)
 install(TARGETS qmlbinding
     RUNTIME DESTINATION ${IMPORT_DESTINATION}
     LIBRARY DESTINATION ${IMPORT_DESTINATION}

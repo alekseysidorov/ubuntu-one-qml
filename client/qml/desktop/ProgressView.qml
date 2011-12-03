@@ -15,7 +15,7 @@ Item {
 		opacity: 0
 	}
 
-	ProgressIndicator {
+	BusyIndicator {
 		id: indicator
 		anchors.centerIn: parent
 		opacity: 0
@@ -41,7 +41,7 @@ Item {
 			}
 			PropertyChanges {
 				target: indicator
-				playing: true
+				running: true
 				opacity: 1
 			}
 		}

@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import com.ubuntu.one 1.0
 import QtDesktop 0.1
 
 Column {

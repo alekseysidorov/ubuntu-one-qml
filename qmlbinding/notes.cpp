@@ -74,6 +74,10 @@ Note *Notes::create()
 void Notes::apiRefsReceived()
 {
 	QByteArray data = static_cast<QNetworkReply*>(sender())->readAll();
+	if (data.isEmpty()) {
+		webLogin();
+		return;
+	}
 	QVariantMap map = Json::parse(data).toMap();
 	m_userName = map.value("user-name").toString();
 	m_lastName = map.value("last-name").toString();

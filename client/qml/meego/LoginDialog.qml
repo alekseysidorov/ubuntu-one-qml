@@ -1,6 +1,6 @@
 import QtQuick 1.0
 import com.nokia.meego 1.0
-import "constants.js" as Ui
+import "constants.js" as UI
 
 Dialog {
     id: loginDialog
@@ -11,8 +11,8 @@ Dialog {
         anchors.right: parent.right
         anchors.left: parent.left
         id: textheader
-        font.pixelSize: Ui.Font.LargeSize
-        color: Ui.Font.DefaultColor
+		font.pixelSize: UI.FONT_DEFAULT_SIZE
+		color: UI.LIST_TITLE_COLOR_INVERTED
         text: qsTr("Welcome to Ubuntu One")
         wrapMode: Text.WordWrap
     }
@@ -26,8 +26,8 @@ Dialog {
 
             width: parent.width
             text: qsTr("Email:")
-            font.pixelSize: Ui.Font.DefaultSize
-            color: Ui.Font.DefaultColor
+			font.pixelSize: UI.FONT_DEFAULT_SIZE
+			color: UI.LIST_TITLE_COLOR_INVERTED
         }
         TextField {
             id: loginInput
@@ -41,8 +41,8 @@ Dialog {
 
             width: parent.width
             text: qsTr("Password:")
-            font.pixelSize: Ui.Font.DefaultSize
-            color: Ui.Font.DefaultColor
+			font.pixelSize: UI.FONT_DEFAULT_SIZE
+			color: UI.LIST_TITLE_COLOR_INVERTED
         }
         TextField {
             id: passwordInput

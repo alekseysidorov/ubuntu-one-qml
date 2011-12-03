@@ -1,22 +1,10 @@
-import QtQuick 1.0
+import QtQuick 1.1
 import com.nokia.meego 1.0
-import UbuntuOne 0.1
+import com.ubuntu.one 1.0
 
 PageStackWindow {
-    id: rootWindow
-    initialPage: Page {
-        NoteListPage {
-            id: notesListPage
-        }
-        tools: ToolBarLayout {
-            ButtonRow {
-                style: TabButtonStyle { }
-                TabIcon {
-                    platformIconId: "toolbar-settings"
-                }
-            }
-        }
-    }
+	id: appWindow
+	initialPage: noteListPage
 
     Api {
         id: api
@@ -33,4 +21,53 @@ PageStackWindow {
             api.requestToken(email, password);
         }
     }
+
+	NoteListPage {
+		id: noteListPage
+		notes: api.notes
+		tools: commonTools
+	}
+
+	NoteEditPage {
+		id: noteEditPage
+	}
+
+	AboutPage { id: aboutPage }
+
+	ToolBarLayout {
+		id: commonTools
+		visible: true
+
+		ToolIcon {
+			iconId: "toolbar-add"
+			onClicked: {
+				noteEditPage.note = api.notes.create();
+				pageStack.push(noteEditPage);
+			}
+		}
+		ToolIcon {
+			platformIconId: "toolbar-view-menu"
+			anchors.right: (parent === undefined)? undefined: parent.right
+			onClicked: (menu.status === DialogStatus.Closed)? menu.open(): menu.close()
+		}
+	}
+
+	Menu {
+		id: menu
+		visualParent: pageStack
+		MenuLayout {
+//			MenuItem {
+//				text: "Settings"
+//				onClicked: {menu.close(); pageStack.push(settingsPage)}
+//			}
+			MenuItem {
+				text: "About"
+				onClicked: {menu.close(); pageStack.push(aboutPage)}
+			}
+			MenuItem {
+				text: "Sync"
+				onClicked: api.notes.sync();
+			}
+		}
+	}
 }

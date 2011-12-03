@@ -1,5 +1,5 @@
 import QtQuick 1.0
-import UbuntuOne 0.1
+import com.ubuntu.one 1.0
 
 Component {
     Item {

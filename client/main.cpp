@@ -20,11 +20,12 @@ int main(int argc, char *argv[])
 	qDebug() << viewer.engine()->importPathList();
 
 	//HACK
-	QDir dir("./qmlbinding");
-	//dir = QDir(app.applicationDirPath() + "/UbuntuOne");
+	QDir dir(app.applicationDirPath() + "/../qmlbinding");
 	foreach (QString plugin, dir.entryList()) {
 		QString error;
-		viewer.engine()->importPlugin(dir.absoluteFilePath(plugin), QLatin1String("UbuntuOne"), &error);
+		viewer.engine()->importPlugin(dir.absoluteFilePath(plugin), QLatin1String("com.ubuntu.one"), &error);
+		if (error.isEmpty())
+			qWarning("Hack load");
 	}
 	if (QIcon::themeName().isEmpty())
 		QIcon::setThemeName("oxygen");

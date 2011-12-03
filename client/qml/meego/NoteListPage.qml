@@ -1,6 +1,46 @@
-import QtQuick 1.0
+import QtQuick 1.1
+import com.nokia.meego 1.0
+import com.ubuntu.one 1.0
 
-Rectangle {
-    width: 100
-    height: 62
+Page {
+	id: noteListPage
+	property QtObject notes: null
+
+	function truncate(str, n)
+	{
+		var suffix = "...";
+		if (n > str.length)
+			str = str.substring(0, n) + suffix;
+		return str;
+	}
+
+	PageHeader {
+		id: header
+		text: qsTr("Notes:")
+	}
+
+	ListView {
+		id: listView
+		anchors.top: header.bottom
+		anchors.left: parent.left
+		anchors.right: parent.right
+		anchors.bottom: parent.bottom
+		anchors.margins: 11
+		clip: true
+		focus: true
+		model: notes.model
+		delegate: ItemDelegate {
+			title: note.title
+			subtitle: truncate(note.content, 10)
+			onClicked: {
+				noteEditPage.note = note;
+				pageStack.push(noteEditPage);
+			}
+		}
+	}
+
+	ScrollDecorator {
+		flickableItem: listView
+	}
+
 }
