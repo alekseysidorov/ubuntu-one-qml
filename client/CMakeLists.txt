@@ -1,4 +1,4 @@
-project(client)
+project(ubuntuNotes)
 
 message(STATUS "Searching client sources and headers")
 # Search for source and headers in source directory
@@ -18,17 +18,18 @@ file(GLOB_RECURSE SRC "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE HDR "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 file(GLOB_RECURSE FORMS "${CMAKE_CURRENT_SOURCE_DIR}/*.ui")
 qt4_wrap_ui(UIS_H ${FORMS})
+moc_wrap_cpp(MOC_SRCS ${HDR})
 
 if(APPLE)
     # set how it shows up in the Info.plist file
-    SET(MACOSX_BUNDLE_INFO_STRING "Foo")
+    SET(MACOSX_BUNDLE_INFO_STRING "TODO")
     SET(MACOSX_BUNDLE_LONG_VERSION_STRING "0.1")
-    SET(MACOSX_BUNDLE_BUNDLE_NAME "ubuntuOne")
+    SET(MACOSX_BUNDLE_BUNDLE_NAME "ubuntuNotes")
     SET(MACOSX_BUNDLE_BUNDLE_VERSION "0.1")
 endif()
 
 # This project will generate library
-add_executable(client WIN32 MACOSX_BUNDLE ${SRC} ${HDR} ${UIS_H} ${QML_DIR})
+add_executable(ubuntuNotes WIN32 MACOSX_BUNDLE ${SRC} ${HDR} ${UIS_H} ${QML_DIR} ${MOC_SRCS})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
     .
@@ -37,8 +38,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-update_compiler_flags(client)
-target_link_libraries(client ${QT_LIBRARIES} ${QT_QTMAIN_LIBRARY})
+update_compiler_flags(ubuntuNotes)
+target_link_libraries(ubuntuNotes ${QT_LIBRARIES} ${QT_QTMAIN_LIBRARY})
 
     add_custom_target(qml-${CLIENT_TYPE}
     ALL
@@ -72,7 +73,7 @@ if(WIN32)
     endforeach()
 endif()
 
-install(TARGETS client
+install(TARGETS ubuntuNotes
     RUNTIME DESTINATION ${BINDIR}
     LIBRARY DESTINATION ${LIBDIR}
     ARCHIVE DESTINATION ${LIBDIR}

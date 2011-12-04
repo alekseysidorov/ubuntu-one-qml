@@ -20,7 +20,7 @@ include(${QT_USE_FILE})
 include(CommonUtils)
 
 set(QT_MIN_VERSION "4.7.4")
-define_bundle_paths(client)
+define_bundle_paths(ubuntuNotes)
 
 option(CREATE_BUNDLE "Create application bundle then install" OFF)
 
