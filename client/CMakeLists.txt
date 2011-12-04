@@ -3,15 +3,13 @@ project(ubuntuNotes)
 message(STATUS "Searching client sources and headers")
 # Search for source and headers in source directory
 
-if(NOT HARMATTAN)
-	check_qml_module(desktopHarmattan HARMATTAN)
-endif()
-
 if(HARMATTAN)
     set(CLIENT_TYPE meego)
+    message(STATUS "Using meego harmattan client")
 else()
     set(CLIENT_TYPE desktop)
     list(APPEND QML_MODULES QtDesktop)
+    message(STATUS "Using desktop client")
 endif()
 
 set(QML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qml/${CLIENT_TYPE}")

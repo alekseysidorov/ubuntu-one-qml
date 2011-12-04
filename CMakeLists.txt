@@ -19,6 +19,7 @@ find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
 include(CommonUtils)
 
+#option(HARMATTAN "Harmattan gui" OFF)
 if(HARMATTAN)
 	add_definitions(-DMEEGO_EDITION_HARMATTAN)
 endif()
