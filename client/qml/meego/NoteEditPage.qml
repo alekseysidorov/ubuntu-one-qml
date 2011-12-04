@@ -85,13 +85,13 @@ Page {
 			left: parent.left;
 			right: parent.right;
 			bottom: parent.bottom;
-			bottomMargin: UI.LIST_ITEM_MARGIN
+			bottomMargin: UI.LIST_ITEM_HEIGHT
 			top: header.bottom
 		}
 
 		TextArea {
 			id: textField
-
+			width: parent.width
 			text: note.content
 			style: textFieldStyle
 		}

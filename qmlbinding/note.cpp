@@ -10,6 +10,7 @@ Note::Note(Notes *notes) :
 {
 	QUuid uid = QUuid::createUuid();
 	m_guid = uid.toString();
+	m_createDate = QDateTime::currentDateTime();
 }
 
 Note::Note(const QString &guid, Notes *notes) :
@@ -88,6 +89,7 @@ void Note::fill(Note *note, const QVariantMap &data)
 	//note->setGuid(data.value("guid"));
 	note->setTitle(data.value("title").toString());
 	note->setContent(data.value("note-content").toString());
+	note->setCreateDate(data.value("create-date").toDateTime());
 	note->setRevision(data.value("last-sync-revision").toInt());
 }
 
@@ -99,6 +101,17 @@ bool Note::isMarkedForRemoral() const
 void Note::markForRemoral(bool set)
 {
 	m_isMarkedForRemoral = set;
+}
+
+void Note::setCreateDate(const QDateTime &date)
+{
+	m_createDate = date;
+	emit createTimeChanged();
+}
+
+QDateTime Note::createDate() const
+{
+	return m_createDate;
 }
 
 void Note::save()
@@ -118,4 +131,5 @@ void Note::sync()
 	list.append(this);
 	m_notes->updateNotes(list);
 }
+
 

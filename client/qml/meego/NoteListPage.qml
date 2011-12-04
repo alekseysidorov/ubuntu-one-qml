@@ -24,7 +24,7 @@ Page {
 		model: notes.model
 		delegate: ItemDelegate {			
 			title: note.title
-			subtitle: qsTr("Type to read or edit")
+			subtitle: Qt.formatDateTime(note.createDate, "dd.MM.yyyy");
 			onClicked: {
 				noteEditPage.note = note;
 				pageStack.push(noteEditPage);
