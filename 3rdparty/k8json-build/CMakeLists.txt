@@ -19,7 +19,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 )
 
 update_compiler_flags(k8json)
-add_definitions(-DJSON_LIBRARY)
+#add_definitions(-DJSON_LIBRARY)
+add_definitions(-DJSON_STATIC)
 add_definitions(-DK8JSON_INCLUDE_GENERATOR)
 add_definitions(-DK8JSON_INCLUDE_COMPLEX_GENERATOR)
 
