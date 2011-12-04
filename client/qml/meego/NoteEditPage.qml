@@ -18,12 +18,12 @@ Page {
 				pageStack.pop()
 			}
 		}
-		ToolIcon {
-			iconId: "toolbar-" + textField.readOnly ? "unlocked" : "locked"
-			onClicked: {
-				textField.readOnly = !textField.readOnly;
-			}
-		}
+		//ToolIcon {
+		//	iconId: "toolbar-" + textField.readOnly ? "unlocked" : "locked"
+		//	onClicked: {
+		//		textField.readOnly = !textField.readOnly;
+		//	}
+		//}
 		ToolIcon {
 			platformIconId: "toolbar-delete"
 			anchors.right: (parent === undefined) ? undefined: parent.right
@@ -76,15 +76,28 @@ Page {
 		backgroundError: "transparent"
 	}
 
-	TextArea {
-		id: textField
+	Flickable {
+		id: textView
+		clip: true
+		contentWidth: parent.width
+		contentHeight: textField.height
 		anchors {
 			left: parent.left;
 			right: parent.right;
 			bottom: parent.bottom;
+			bottomMargin: UI.LIST_ITEM_MARGIN
 			top: header.bottom
 		}
-		text: note.content
-		style: textFieldStyle
+
+		TextArea {
+			id: textField
+
+			text: note.content
+			style: textFieldStyle
+		}
+	}
+
+	ScrollDecorator {
+		flickableItem: textView
 	}
 }
