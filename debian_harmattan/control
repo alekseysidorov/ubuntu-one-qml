@@ -1,11 +1,11 @@
-Source: ubuntuNotes
+Source: ubuntunotes
 Section: user/network
 Priority: extra
 Maintainer: Aleksey Sidorov <gorthauer87@ya.ru>
 Build-Depends: debhelper (>= 5),locales,cmake, libgconf2-6,libssl-dev,libxext-dev,libqt4-dev,libqca2-dev,libqca2-plugin-ossl,libidn11-dev, libqtm-dev
 Standards-Version: 3.7.2
 
-Package: ubuntuNotes
+Package: ubuntunotes
 Section: user/network
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},libidn11,libqca2-plugin-ossl
@@ -119,7 +119,7 @@ XB-Maemo-Icon-26:
  DO2dzZsSAAAAAElFTkSuQmCC
  ====
 
-Package: ubuntuNotes-dbg
+Package: ubuntunotes-dbg
 Section: debug
 Priority: extra
 Architecture: any

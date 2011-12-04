@@ -12,7 +12,7 @@ list(APPEND HDR json.h)
 list(APPEND SRC json.cpp)
 
 # This project will generate library
-add_library(k8json SHARED ${SRC} ${HDR} ${UIS_H})
+add_library(k8json STATIC ${SRC} ${HDR} ${UIS_H})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}

@@ -3,9 +3,11 @@ project(ubuntuNotes)
 message(STATUS "Searching client sources and headers")
 # Search for source and headers in source directory
 
-check_qml_module(desktopHarmattan HARMATTAN)
+if(NOT HARMATTAN)
+	check_qml_module(desktopHarmattan HARMATTAN)
+endif()
 
-if(${HARMATTAN} STREQUAL "FOUND")
+if(HARMATTAN)
     set(CLIENT_TYPE meego)
 else()
     set(CLIENT_TYPE desktop)

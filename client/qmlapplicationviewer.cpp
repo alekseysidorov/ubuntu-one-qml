@@ -37,20 +37,24 @@ QString QmlApplicationViewerPrivate::adjustPath(const QString &path)
 #else
 	QString pathInInstallDir = QCoreApplication::applicationDirPath()
 		+ QLatin1String("/../") + path;
+	qDebug() << pathInInstallDir;
 	if (pathInInstallDir.contains(QLatin1String("opt"))
 			&& pathInInstallDir.contains(QLatin1String("bin"))
-			&& QFileInfo(pathInInstallDir).exists()) {
+			&& QFileInfo(pathInInstallDir).exists()) {		
 		return pathInInstallDir;
 	} else {
 		pathInInstallDir = QCoreApplication::applicationDirPath()
 						   + QLatin1String("/../share/") + path;
+		qDebug() << pathInInstallDir;
 		if (QFileInfo(pathInInstallDir).exists())
 			return pathInInstallDir;
 		pathInInstallDir = QCoreApplication::applicationDirPath()
-						   + QLatin1String("/../share/apps/client/") + path;
+						   + QLatin1String("/../share/apps/ubuntuNotes/") + path;
+		qDebug() << pathInInstallDir;						   
 		if (QFileInfo(pathInInstallDir).exists())
 			return pathInInstallDir;
 		pathInInstallDir = QCoreApplication::applicationDirPath() + QLatin1String("/") + path;
+		qDebug() << pathInInstallDir;		
 		if (QFileInfo(pathInInstallDir).exists())
 			return pathInInstallDir;
 	}
