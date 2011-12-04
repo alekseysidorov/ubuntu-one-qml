@@ -19,7 +19,7 @@ Page {
 			}
 		}
 		ToolIcon {
-			iconId: "toolbar-lock"
+			iconId: "toolbar-" + textField.readOnly ? "unlocked" : "locked"
 			onClicked: {
 				textField.readOnly = !textField.readOnly;
 			}

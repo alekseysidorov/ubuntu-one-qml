@@ -1,32 +1,31 @@
 import QtQuick 1.1
 import com.nokia.meego 1.0
+import com.nokia.extras 1.0
 import com.ubuntu.one 1.0
 
 PageStackWindow {
 	id: appWindow
 	initialPage: noteListPage
-	showStatusBar: false
 
-    Api {
-        id: api
+	Api {
+		id: api
 
-        Component.onCompleted: {
-            if (!hasToken)
-                loginDialog.open();
-        }
-    }
+		Component.onCompleted: {
+			if (!hasToken)
+				loginDialog.open();
+		}
+	}
 
-    LoginDialog {
-        id: loginDialog
-        onAccepted: {
-            api.requestToken(email, password);
-        }
-    }
+	LoginDialog {
+		id: loginDialog
+		onAccepted: {
+			api.requestToken(email, password);
+		}
+	}
 
 	NoteListPage {
 		id: noteListPage
 		notes: api.notes
-		tools: commonTools
 	}
 
 	NoteEditPage {

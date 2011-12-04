@@ -19,6 +19,10 @@ find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
 include(CommonUtils)
 
+if(HARMATTAN)
+	add_definitions(-DMEEGO_EDITION_HARMATTAN)
+endif()
+
 set(QT_MIN_VERSION "4.7.4")
 define_bundle_paths(ubuntuNotes)
 

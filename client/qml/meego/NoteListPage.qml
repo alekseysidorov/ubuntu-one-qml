@@ -5,14 +5,7 @@ import com.ubuntu.one 1.0
 Page {
 	id: noteListPage
 	property QtObject notes: null
-
-	function truncate(str, n)
-	{
-		var suffix = "...";
-		if (n > str.length)
-			str = str.substring(0, n) + suffix;
-		return str;
-	}
+	tools: commonTools
 
 	PageHeader {
 		id: header
