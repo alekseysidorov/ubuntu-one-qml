@@ -56,10 +56,6 @@ PageStackWindow {
 		id: menu
 		visualParent: pageStack
 		MenuLayout {
-//			MenuItem {
-//				text: "Settings"
-//				onClicked: {menu.close(); pageStack.push(settingsPage)}
-//			}
 			MenuItem {
 				text: "About"
 				onClicked: {menu.close(); pageStack.push(aboutPage)}

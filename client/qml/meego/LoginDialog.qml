@@ -31,10 +31,8 @@ Dialog {
         }
         TextField {
             id: loginInput
-
             width: parent.width
-            font.pixelSize: Ui.Font.DefaultSize
-            KeyNavigation.tab: passwordInput
+			KeyNavigation.tab: passwordInput
         }
         Text {
             id: passwordTitle
@@ -46,7 +44,6 @@ Dialog {
         }
         TextField {
             id: passwordInput
-
             width: parent.width
             echoMode: TextInput.Password
             KeyNavigation.tab: loginButton

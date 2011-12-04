@@ -42,3 +42,14 @@ void WebkitAuth::setLoginData(const QString &email, const QString &password)
 	m_email = email;
 	m_password = password;
 }
+
+void WebkitAuth::showExpanded()
+{
+#if defined(Q_OS_SYMBIAN) || defined(MEEGO_EDITION_HARMATTAN) || defined(Q_WS_SIMULATOR)
+	showFullScreen();
+#elif defined(Q_WS_MAEMO_5)
+	showMaximized();
+#else
+	show();
+#endif
+}

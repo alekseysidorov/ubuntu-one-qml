@@ -134,7 +134,7 @@ void Notes::webLogin()
 {
 	WebkitAuth *webAuth = new WebkitAuth(QUrl("https://one.ubuntu.com/auth/login"), m_api->manager());
 	webAuth->setLoginData(m_api->email(), m_api->pasword());
-	webAuth->show();
+	webAuth->showExpanded();
 	connect(webAuth, SIGNAL(finished(bool)), SLOT(onWebAuthFinished(bool)));
 }
 
