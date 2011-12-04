@@ -29,9 +29,9 @@ Page {
 		clip: true
 		focus: true
 		model: notes.model
-		delegate: ItemDelegate {
+		delegate: ItemDelegate {			
 			title: note.title
-			subtitle: truncate(note.content, 10)
+			subtitle: qsTr("Type to read or edit")
 			onClicked: {
 				noteEditPage.note = note;
 				pageStack.push(noteEditPage);

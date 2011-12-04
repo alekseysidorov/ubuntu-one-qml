@@ -19,6 +19,12 @@ Page {
 			}
 		}
 		ToolIcon {
+			iconId: "toolbar-lock"
+			onClicked: {
+				textField.readOnly = !textField.readOnly;
+			}
+		}
+		ToolIcon {
 			platformIconId: "toolbar-delete"
 			anchors.right: (parent === undefined) ? undefined: parent.right
 			onClicked: {

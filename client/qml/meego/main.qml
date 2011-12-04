@@ -5,6 +5,7 @@ import com.ubuntu.one 1.0
 PageStackWindow {
 	id: appWindow
 	initialPage: noteListPage
+	showStatusBar: false
 
     Api {
         id: api
