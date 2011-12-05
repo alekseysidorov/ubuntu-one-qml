@@ -113,6 +113,7 @@ if(CREATE_BUNDLE)
 		imageformats/qtga
 		imageformats/qtiff
 		iconengines/qsvgicon
+		sqldrivers/qsqlite
 		crypto/qca-ossl
 	)
 

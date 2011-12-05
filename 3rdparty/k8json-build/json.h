@@ -21,10 +21,14 @@
 #include <QVariant>
 #include <QByteArray>
 
-#if defined(JSON_LIBRARY)
-#  define JSON_EXPORT Q_DECL_EXPORT
+#ifndef JSON_STATIC
+#  if defined(JSON_LIBRARY)
+#    define JSON_EXPORT Q_DECL_EXPORT
+#  else
+#    define JSON_EXPORT Q_DECL_IMPORT
+#  endif
 #else
-#  define JSON_EXPORT Q_DECL_IMPORT
+#  define JSON_EXPORT
 #endif
 
 class QObject;

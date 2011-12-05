@@ -31,6 +31,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 )
 
 update_compiler_flags(qmlbinding)
+add_definitions(-DJSON_STATIC)
+add_definitions(-DQOAUTH_STATIC)
 
 target_link_libraries(qmlbinding
     k8json
