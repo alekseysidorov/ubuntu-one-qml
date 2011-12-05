@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=ubuntuNotes
+Name[ru]=ubuntuNotes
+GenericName=ubuntuNotes 
+GenericName[ru]=ubuntuNotes
+Comment=Notes editor with sync
+Comment[ru]=Редактор заметок с синхронизацией
+Exec=ubuntuNotes
+Icon=ubuntunotes
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Network;Qt;
+

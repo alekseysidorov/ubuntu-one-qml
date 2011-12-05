@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=ubuntuNotes
+Name[ru]=ubuntuNotes
+GenericName=ubuntuNotes 
+GenericName[ru]=ubuntuNotes
+Comment=Notes editor with sync
+Comment[ru]=Редактор заметок с синхронизацией
+Exec=/usr/bin/single-instance /opt/ubuntunotes/bin/ubuntuNotes %U
+Icon=/usr/share/icons/hicolor/80x80/apps/ubuntuNotes.png
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Network;Qt;
+
