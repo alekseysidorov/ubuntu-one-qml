@@ -14,7 +14,7 @@ class Note : public QObject
 	Q_PROPERTY(QString content READ content WRITE setContent NOTIFY textChanged)
 	Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
 	Q_PROPERTY(Status status READ status NOTIFY statusChanged)
-	Q_PROPERTY(QDateTime createDate READ createDate NOTIFY createTimeChanged)
+	Q_PROPERTY(QDateTime createDate READ createDate NOTIFY createDateChanged)
 	Q_ENUMS(Status)
 public:
 	enum Status
@@ -48,7 +48,7 @@ signals:
 	void revisionChanged();
 	void saved();
 	void statusChanged();
-	void createTimeChanged();
+	void createDateChanged();
 public slots:
 	void save();
 	void remove();

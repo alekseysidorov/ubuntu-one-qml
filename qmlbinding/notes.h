@@ -13,13 +13,17 @@ class Notes : public QObject
 {
     Q_OBJECT
 	Q_PROPERTY(NotesModel* model READ model NOTIFY modelChanged)
+	Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
 public:
 	explicit Notes(UbuntuOneApi *auth);
 	NotesModel *model();
 	void updateNotes(const NoteList &notes);
+	void setBusy(bool busy);
+	bool isBusy() const;
 signals:
 	void modelChanged();
 	void syncFinished();
+	void busyChanged();
 protected:
 	Note *fillNote(const QVariantMap &map);
 public slots:
@@ -43,6 +47,7 @@ private:
 
 	int m_latestSyncRevision;
 	QByteArray m_currentSyncGuid;
+	bool m_busy;
 };
 
 #endif // NOTES_H

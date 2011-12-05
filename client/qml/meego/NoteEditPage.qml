@@ -37,7 +37,7 @@ Page {
 	PageHeader {
 		id: header
 		property string title: note.title
-		text: qsTr("Edit:") + title
+		text: title
 		clickable: true
 		onClicked: {
 			noteTitleChange.text = title;
@@ -85,7 +85,6 @@ Page {
 			left: parent.left;
 			right: parent.right;
 			bottom: parent.bottom;
-			bottomMargin: UI.LIST_ITEM_HEIGHT
 			top: header.bottom
 		}
 

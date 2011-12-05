@@ -22,12 +22,21 @@ Page {
 		clip: true
 		focus: true
 		model: notes.model
-		delegate: ItemDelegate {			
+		delegate: ItemDelegate {
 			title: note.title
-			subtitle: Qt.formatDateTime(note.createDate, "dd.MM.yyyy");
+			subtitle: truncate(note.content, 32)
 			onClicked: {
 				noteEditPage.note = note;
 				pageStack.push(noteEditPage);
+			}
+
+			function truncate(str, n, suffix) {
+				str = str.replace(/\r\n/g, "");
+				if (suffix === undefined)
+					suffix = "...";
+				if (str.length > n)
+					str = str.substring(0, n) + suffix;
+				return str;
 			}
 		}
 	}

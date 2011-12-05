@@ -55,14 +55,15 @@ Item {
                 font.weight: listItem.titleWeight
                 font.pixelSize: listItem.titleSize
                 color: listItem.titleColor
-            }
+			}
 
             Label {
                 id: subText
                 text: model.subtitle
                 font.weight: listItem.subtitleWeight
-                font.pixelSize: listItem.subtitleSize
+				font.pixelSize: listItem.subtitleSize
                 color: listItem.subtitleColor
+				elide: Text.ElideRight
 
                 visible: text != ""
             }

@@ -13,7 +13,8 @@
 
 Notes::Notes(UbuntuOneApi *auth) : QObject(auth),
 	m_api(auth),
-	m_latestSyncRevision(0)
+	m_latestSyncRevision(0),
+	m_busy(false)
 {
 }
 
@@ -45,6 +46,18 @@ void Notes::updateNotes(const NoteList &notes)
 	QNetworkReply *reply = m_api->put(QUrl(m_apiRef), data);
 	reply->setProperty("notes", qVariantFromValue(notes));
 	connect(reply, SIGNAL(finished()), SLOT(onNotesUpdateFinished()));
+	setBusy(true);
+}
+
+void Notes::setBusy(bool isBusy)
+{
+	m_busy = isBusy;
+	emit busyChanged();
+}
+
+bool Notes::isBusy() const
+{
+	return m_busy;
 }
 
 void Notes::sync()
@@ -60,6 +73,7 @@ void Notes::sync()
 	url.addQueryItem("include_notes", "true");
 	qDebug() << url;
 	connect(m_api->get(url), SIGNAL(finished()), SLOT(onNotesReceived()));
+	setBusy(true);
 }
 
 Note *Notes::create()
@@ -128,6 +142,7 @@ void Notes::onNotesReceived()
 		NotesStorage(this).save(list);
 	}
 	emit syncFinished();
+	setBusy(false);
 }
 
 void Notes::webLogin()
@@ -173,8 +188,8 @@ void Notes::onNotesUpdateFinished()
 			storage.remove(note->guid());
 		}
 	}
-
 	emit syncFinished();
+	setBusy(false);
 }
 
 Note *Notes::fillNote(const QVariantMap &map)

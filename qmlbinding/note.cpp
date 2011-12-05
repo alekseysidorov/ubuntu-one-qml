@@ -78,6 +78,7 @@ QVariantMap Note::serialize(Note *note, bool saveGuid)
 		map.insert("guid", note->guid());
 	map.insert("title", note->title());
 	map.insert("note-content", note->content());
+	map.insert("create-date", note->createDate());
 	//map.insert("last-sync-revision", note->revision());
 	if (note->isMarkedForRemoral())
 		map.insert("command", "delete");
@@ -106,7 +107,7 @@ void Note::markForRemoral(bool set)
 void Note::setCreateDate(const QDateTime &date)
 {
 	m_createDate = date;
-	emit createTimeChanged();
+	emit createDateChanged();
 }
 
 QDateTime Note::createDate() const

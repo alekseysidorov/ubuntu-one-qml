@@ -13,19 +13,21 @@ Page {
 		id: about
 		Column {
 			id: column
-			Row {
-				height: 90
-				Image {source: ""}
+			height: logo.height
+
+			Image {
+				id: logo
+				source: "images/UbuntuOneLogo.svg"
 			}
-			Row {
-				Label {
-					font.pixelSize: 32
-					textFormat: Text.RichText
-					wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-					width: aboutTools.width - 10
-					text: "<b>Ubuntu one notes client</b><p>Version 0.1"
-					onLinkActivated: {platform.browse(link)}
-				}
+			Label {
+				font.pixelSize: 32
+				textFormat: Text.RichText
+				wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+				width: aboutTools.width - 10
+				text: qsTr("<b>Notes client</b> \
+						  <p>Version 0.1</p> \
+						  <p><a href=\"https://github.com/gorthauer/ubuntu-one-qml\">Source code</a></p>")
+				onLinkActivated: {platform.browse(link)}
 			}
 		}
 	}

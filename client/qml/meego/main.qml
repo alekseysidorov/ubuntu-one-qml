@@ -8,18 +8,29 @@ PageStackWindow {
 
 	Api {
 		id: api
+		Component.onCompleted: checkToken()
+		onHasTokenChanged: checkToken()
 
-		Component.onCompleted: {
+		function checkToken() {
 			if (!hasToken)
-				loginDialog.open();
+				loginPage.open();
+			else
+				api.notes.sync();
 		}
 	}
 
-	LoginDialog {
-		id: loginDialog
-		onAccepted: {
-			api.requestToken(email, password);
-		}
+	BusyIndicator {
+		id: spinner
+		platformStyle: BusyIndicatorStyle {size: "large"}
+		anchors.centerIn: parent
+		focus: false
+		visible: api.notes.busy
+	}
+
+
+	LoginPage {
+		id: loginPage
+		onAccepted: api.requestToken(email, password);
 	}
 
 	NoteListPage {
@@ -56,12 +67,21 @@ PageStackWindow {
 		visualParent: pageStack
 		MenuLayout {
 			MenuItem {
-				text: "About"
+				text: qsTr("About")
 				onClicked: {menu.close(); pageStack.push(aboutPage)}
 			}
 			MenuItem {
-				text: "Sync"
+				text: qsTr("Sync")
 				onClicked: api.notes.sync();
+			}
+			MenuItem {
+				text: api.hasToken ? qsTr("Logout") : qsTr("Login")
+				onClicked: {
+					if (api.hasToken)
+						api.purge();
+					else
+						loginPage.open();
+				}
 			}
 		}
 	}
