@@ -19,8 +19,6 @@
 
 #include <QDebug>
 
-//#include <qplatformdefs.h> // MEEGO_EDITION_HARMATTAN
-
 class QmlApplicationViewerPrivate
 {
     QString mainQmlFile;
@@ -133,9 +131,9 @@ void QmlApplicationViewer::setOrientation(ScreenOrientation orientation)
 void QmlApplicationViewer::showExpanded()
 {
 #if defined(Q_OS_SYMBIAN) || defined(MEEGO_EDITION_HARMATTAN) || defined(Q_WS_SIMULATOR)
-    showFullScreen();
+	showFullScreen();
 #elif defined(Q_WS_MAEMO_5)
-    showMaximized();
+	showMaximized();
 #else
     show();
 #endif
