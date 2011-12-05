@@ -11,7 +11,6 @@ file(GLOB_RECURSE HDR "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 file(GLOB_RECURSE RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.qrc")
 file(GLOB_RECURSE QML "${QMLDIR}/*.*")
 
-
 list(APPEND HDR ${QML_OBJECT_LIST_DIR}/qobjectlistmodel.h)
 list(APPEND SRC ${QML_OBJECT_LIST_DIR}/qobjectlistmodel.cpp)
 qt4_add_resources(RCC ${RESOURCES})

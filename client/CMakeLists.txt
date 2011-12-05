@@ -133,3 +133,7 @@ if(HARMATTAN)
 	install(FILES application/harmattan/ubuntuNotes_harmattan.desktop DESTINATION /usr/share/applications)
 	install(FILES application/harmattan/ubuntuNotes.png DESTINATION /usr/share/icons/hicolor/80x80/apps/)
 endif()
+
+if(APPLE)
+    install(FILES mac/qt.conf DESTINATION ${SHAREDIR})
+endif()

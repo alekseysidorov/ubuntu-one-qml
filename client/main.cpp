@@ -6,6 +6,7 @@
 #include <QtDeclarative>
 #include <QDebug>
 #include <QIcon>
+#include <QLibraryInfo>
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +19,7 @@ int main(int argc, char *argv[])
 	QmlApplicationViewer viewer;
 
 	qDebug() << viewer.engine()->importPathList();
+	qDebug() << QLibraryInfo::location(QLibraryInfo::PluginsPath);
 
 	//HACK
 	QDir dir(app.applicationDirPath() + "/../qmlbinding");
