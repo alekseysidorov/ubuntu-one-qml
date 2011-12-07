@@ -18,12 +18,6 @@ Page {
 				pageStack.pop()
 			}
 		}
-		//ToolIcon {
-		//	iconId: "toolbar-" + textField.readOnly ? "unlocked" : "locked"
-		//	onClicked: {
-		//		textField.readOnly = !textField.readOnly;
-		//	}
-		//}
 		ToolIcon {
 			platformIconId: "toolbar-delete"
 			anchors.right: (parent === undefined) ? undefined: parent.right

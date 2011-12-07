@@ -102,6 +102,9 @@ void UbuntuOneApi::onAuthReplyFinished()
 {
 	QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
 	QVariantMap response = Json::parse(reply->readAll()).toMap();
+	if (response.isEmpty()) {
+		emit authorizationFailed(tr("Unable to recieve token"));
+	}
 
 	m_token = response.value("token").toByteArray();
 	m_tokenSecret = response.value("token_secret").toByteArray();

@@ -28,7 +28,6 @@ Sheet {
 		TextField {
 			id: loginInput
 			width: parent.width
-			KeyNavigation.tab: passwordInput
 		}
 
 		Text {
@@ -44,7 +43,6 @@ Sheet {
 			id: passwordInput
 			width: parent.width
 			echoMode: TextInput.Password
-			KeyNavigation.tab: loginButton
 		}
 	}
 	acceptButtonText: qsTr("Login")

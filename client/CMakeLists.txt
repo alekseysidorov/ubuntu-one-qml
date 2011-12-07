@@ -49,14 +49,14 @@ target_link_libraries(ubuntuNotes ${QT_LIBRARIES} ${QT_QTMAIN_LIBRARY})
 if(APPLE)
 		set(QML_DESKTOP_CLIENT_DIR "${CMAKE_CURRENT_BINARY_DIR}/${BUNDLE_NAME}/Contents/Resources/qml/client")
 else()
-	set(QML_DESKTOP_CLIENT_DIR "${CMAKE_CURRENT_BINARY_DIR}/qml/client")
+        set(QML_CLIENT_DIR "${CMAKE_CURRENT_BINARY_DIR}/qml/client")
 endif()
 
 add_custom_command(
 	TARGET		qml-${CLIENT_TYPE}
 	POST_BUILD
 	COMMAND		${CMAKE_COMMAND}
-	ARGS		-E copy_directory "${QML_DIR}" "${QML_DESKTOP_CLIENT_DIR}"
+        ARGS		-E copy_directory "${QML_DIR}" "${QML_CLIENT_DIR}"
 )
 
 if(WIN32)
@@ -79,7 +79,7 @@ install(TARGETS ubuntuNotes
 	ARCHIVE DESTINATION ${LIBDIR}
 	BUNDLE DESTINATION .
 )
-install(DIRECTORY ${QML_DESKTOP_CLIENT_DIR} DESTINATION ${SHAREDIR}/qml)
+install(DIRECTORY ${QML_DIR} DESTINATION ${SHAREDIR}/qml)
 
 if(CREATE_BUNDLE)
 	set(APPS ${BUNDLE_PATH})
